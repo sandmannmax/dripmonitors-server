@@ -7,5 +7,6 @@ export class User {
   public username: string;
   public mail: string;
   public password: string;
+  public salt: string;
   public hasValidSession: boolean;
 }
