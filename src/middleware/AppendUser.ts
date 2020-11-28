@@ -7,7 +7,7 @@ export default async (req, res, next) => {
   req.user = userRecord;
  
   if(!userRecord) {
-    return next({status: 401, message: 'User Invalid'});
+    return next({status: 401, message: 'Token Invalid'});
   } else if (userRecord.hasValidSession) {
     return next();
   } else {

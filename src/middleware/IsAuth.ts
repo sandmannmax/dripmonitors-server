@@ -10,13 +10,15 @@ const getTokenFromHeader = (req) => {
 export function IsAuth(req, res, next) {
   try {
     const token = getTokenFromHeader(req);
-    const decoded = JWT.verify(token, config.jwtSecret);
-    console.log(decoded);
-    if (decoded && !decoded.data.refresh) {
-      req['token'] = decoded;
-      next();
+    if (token) {
+      const decoded = JWT.verify(token, config.jwtSecret);
+      if (decoded && !decoded.data.refresh) {
+        req['token'] = decoded;
+        next();
+      } else
+        next({status: 401, message: 'Invalid Token'});
     } else
-      next({status: 401, message: 'Invalid Token'});
+      next({status: 404, message: 'Token Missing'});
   } catch (error) {
     next(error);
   }

@@ -1,0 +1,28 @@
+import { Service } from 'typedi';
+import { IResult } from '../types/IResult';
+
+import { MessageEmbed, WebhookClient } from 'discord.js';
+
+@Service()
+export class DiscordService {
+  private webhookClient: WebhookClient;
+
+  async SendTestMessage({webHook, botName, botImage}: {webHook: string, botName: string, botImage: string}): Promise<IResult> {
+    try {
+      if (webHook){
+        let strings = webHook.split('/');
+        let id = strings[strings.length-2];
+        let token = strings[strings.length-1];
+        this.webhookClient = new WebhookClient(id, token);
+        this.webhookClient.send('Hello there!', {
+          username: botName,
+          avatarURL: botImage
+        });
+        return {success: true, data: {message: 'Send Message successfully'}};
+      } else
+        return {success: false};      
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
+}

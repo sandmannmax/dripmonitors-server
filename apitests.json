@@ -37,7 +37,7 @@
 			}
 		},
 		{
-			"name": "Register Test",
+			"name": "Login Test",
 			"event": [
 				{
 					"listen": "test",
@@ -48,11 +48,36 @@
 				}
 			],
 			"request": {
-				"method": "GET",
-				"url": "http://localhost:3000/register",
+				"method": "POST",
+				"url": "http://localhost:3000/user/login",
 				"body": {
 					"mode": "raw",
-					"raw": "{\"username\": \"testuser\", \"mail\": \"testmail@test.com\", \"password\": \"testpassword\"}",
+					"raw": "{\"username\": \"testuser\", \"password\": \"testpassword\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				}
+			}
+		},		
+		{
+			"name": "Login Wrong Credentials Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": "pm.test(\"Respond is Status 401\", () => { pm.response.to.have.status(401); }); pm.test(\"Respond is Json Content\", () => { pm.response.to.be.json; });",
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"url": "http://localhost:3000/user/login",
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"testuser\", \"password\": \"hm\"}",
 					"options": {
 						"raw": {
 							"language": "json"

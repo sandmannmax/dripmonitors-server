@@ -5,11 +5,11 @@ import { User } from '../types/User';
 const dbProvider = Container.get(DatabaseProvider);
 
 export namespace UserModel {
-  export async function LoginUser({username, password}: {username: string, password: string}): Promise<Array<User>> {
-    let result = await dbProvider.Find<User>('users', {username, password});
-    if (result.length == 1)
-      await dbProvider.Update('users', {_id: result[0]._id}, {hasValidSession: true});
-    return result;
+  export async function SetValidSession({_id}: {_id: string}): Promise<void> {
+    await dbProvider.Update('users', {_id}, {hasValidSession: true});
+  }
+  export async function SetInvalidSession({_id}: {_id: string}): Promise<void> {
+    await dbProvider.Update('users', {_id}, {hasValidSession: false});
   }
 
   export async function CreateUser({username, mail, password, salt}: {username: string, mail: string, password: string, salt: string}): Promise<Array<User>> {
