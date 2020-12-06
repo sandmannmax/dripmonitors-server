@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  web:
+    image: lsb
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - ./web/src:/usr/src/app/src
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - DB_CONNECTION=db:27017/lazyshoebotdb
+      - TOKEN_SECRET=1aWH4OpjF7yi7o6kzAsugxFaiNPS42Ma
+      - PEPPER=4jpXTUuGbKWSvVVkNq6m
+  db:
+    image: mongo
+    volumes:
+      - dbVolume:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  dbVolume:

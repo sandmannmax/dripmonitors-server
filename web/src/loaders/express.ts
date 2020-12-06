@@ -31,6 +31,6 @@ export default async (app: Application) => {
       }});
     }    
   });
-  
-  return app;
+
+  console.log('Express Initialized');
 }

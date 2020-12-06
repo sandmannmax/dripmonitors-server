@@ -5,7 +5,7 @@ export class Log {
 
   constructor(name) {
     this.logger = createLogger({
-        level: 'error',
+        level: 'debug',
         defaultMeta: { service: name },
         transports: [
           new transports.File({ 
@@ -16,6 +16,9 @@ export class Log {
                 format.timestamp(),
                 format.json()
             )
+          }),
+          new transports.Console({
+            format: format.simple(),
           })
         ]
     });

@@ -21,29 +21,44 @@ export namespace UserModel {
   export async function UpdateUsername({_id, username}: {_id: string, username: string}): Promise<User> {
     await dbProvider.Update('users', {_id}, {username});
     let result = await dbProvider.Find<User>('users', {_id});
-    return result[0];
+    if (result.length == 1)
+      return result[0];
+    else
+      return undefined;
   }
 
   export async function UpdateMail({_id, mail}: {_id: string, mail: string}): Promise<User> {
     await dbProvider.Update('users', {_id}, {mail});
     let result = await dbProvider.Find<User>('users', {_id});
-    return result[0];
+    if (result.length == 1)
+      return result[0];
+    else
+      return undefined;
   }
 
   export async function UpdatePassword({_id, password}: {_id: string, password: string}): Promise<User> {
     await dbProvider.Update('users', {_id}, {password});
     let result = await dbProvider.Find<User>('users', {_id});
-    return result[0];
+    if (result.length == 1)
+      return result[0];
+    else
+      return undefined;
   }
 
   export async function FindUser({_id}: {_id: string}): Promise<User> {
     let result = await dbProvider.Find<User>('users', {_id});
-    return result[0];
+    if (result.length == 1)
+      return result[0];
+    else
+      return undefined;
   }
 
   export async function FindUserByUsername({username}: {username: string}): Promise<User> {
     let result = await dbProvider.Find<User>('users', {username});
-    return result[0];
+    if (result.length == 1)
+      return result[0];
+    else
+      return undefined;
   }
 
   export async function DeleteUser({_id}: {_id: string}): Promise<void> {
