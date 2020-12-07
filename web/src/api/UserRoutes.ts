@@ -3,8 +3,7 @@ import Container from 'typedi';
 import { UserService } from '../services/UserService';
 import { IError } from '../types/IError';
 import { IsAuth } from '../middleware/IsAuth';
-import AppendUser from '../middleware/AppendUser';
-import { User } from '../types/User';
+import { UserJWT } from '../types/User';
 
 export class UserRoutes {
   private router: Router;
@@ -14,9 +13,9 @@ export class UserRoutes {
     this.router = Router({strict: true});
     this.userService = Container.get(UserService);
 
-    this.router.post('/login', async (req, res, next) => {
-      const { username, password } = req.body;
-      let result = await this.userService.Login({username, password});
+    this.router.get('/', IsAuth, async (req, res, next) => {
+      const userJWT: UserJWT = req['user'];
+      const result = await this.userService.Get({ _id: userJWT._id });
       if (result.success)
         res.json(result.data);
       else if (result.error)
@@ -27,20 +26,7 @@ export class UserRoutes {
       }
     });
 
-    this.router.post('/logout', IsAuth, AppendUser, async (req, res, next) => {
-      let user: User = req['user'];
-      let result = await this.userService.Logout({_id: user._id});
-      if (result.success)
-        res.json(result.data);
-      else if (result.error)
-        next(result.error);
-      else {
-        let err: IError = {status: 500, message: 'Fehler'};
-        next(err);
-      }
-    });
-
-    this.router.post('/register', async (req, res, next) => {
+    this.router.post('/', async (req, res, next) => {
       const { username, mail, password } = req.body;
       let result = await this.userService.Register({username, mail, password});
       if (result.success)
@@ -53,9 +39,10 @@ export class UserRoutes {
       }
     });
 
-    this.router.post('/refresh', async (req, res, next) => {
-      const { refreshToken } = req.body;
-      let result = await this.userService.Refresh({refreshToken});
+    this.router.patch('/', IsAuth, async (req, res, next) => {
+      let userJWT: UserJWT = req['user'];
+      let { username, mail, password, oldPassword } = req.body;
+      let result = await this.userService.Update({_id: userJWT._id, username, mail, password, oldPassword});
       if (result.success)
         res.json(result.data);
       else if (result.error)
@@ -64,11 +51,11 @@ export class UserRoutes {
         let err: IError = {status: 500, message: 'Fehler'};
         next(err);
       }
-    });  
+    });
 
-    this.router.post('/delete', IsAuth, AppendUser, async (req, res, next) => {
-      let user: User = req['user'];
-      let result = await this.userService.Delete({_id: user._id});
+    this.router.delete('/', IsAuth, async (req, res, next) => {
+      let userJWT: UserJWT = req['user'];
+      let result = await this.userService.Delete({_id: userJWT._id});
       if (result.success)
         res.json(result.data);
       else if (result.error)
@@ -79,38 +66,9 @@ export class UserRoutes {
       }
     });
   
-    this.router.post('/update/username', IsAuth, AppendUser, async (req, res, next) => {
-      let user: User = req['user'];
-      let { username } = req.body;      
-      let result = await this.userService.UpdateUsername({_id: user._id, username});
-      if (result.success)
-        res.json(result.data);
-      else if (result.error)
-        next(result.error);
-      else {
-        let err: IError = {status: 500, message: 'Fehler'};
-        next(err);
-      }
-    });
-    
-    this.router.post('/update/mail', IsAuth, AppendUser, async (req, res, next) => {
-      let user: User = req['user'];
-      let { mail } = req.body;      
-      let result = await this.userService.UpdateMail({_id: user._id, mail});
-      if (result.success)
-        res.json(result.data);
-      else if (result.error)
-        next(result.error);
-      else {
-        let err: IError = {status: 500, message: 'Fehler'};
-        next(err);
-      }
-    });
-    
-    this.router.post('/update/password', IsAuth, AppendUser, async (req, res, next) => {
-      let user: User = req['user'];
-      let { password } = req.body;      
-      let result = await this.userService.UpdatePassword({_id: user._id, password});
+    this.router.get('/services', IsAuth, async (req, res, next) => {
+      const userJWT: UserJWT = req['user'];
+      const result = await this.userService.GetServices({ _id: userJWT._id });
       if (result.success)
         res.json(result.data);
       else if (result.error)

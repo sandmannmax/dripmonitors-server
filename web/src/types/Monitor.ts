@@ -1,5 +1,4 @@
 export class Monitor_O {
-  public _id: string;
   public webHook: string;
   public botName: string;
   public botImage: string;
@@ -15,7 +14,6 @@ export class Monitor {
 
 export function GetMonitor_O(monitor: Monitor): Monitor_O {
   let monitorO: Monitor_O = new Monitor_O();
-  monitorO._id = monitor._id;
   monitorO.botImage = monitor.botImage;
   monitorO.botName = monitor.botName;
   monitorO.webHook = monitor.webHook;

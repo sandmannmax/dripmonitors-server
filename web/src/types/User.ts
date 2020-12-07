@@ -1,6 +1,9 @@
+import { Service } from "./Service";
+
 export class User_O {
   public _id: string;
   public username: string;
+  public mail: string;
 }
 
 export class User {
@@ -12,9 +15,16 @@ export class User {
   public hasValidSession: boolean;
 }
 
+export class UserJWT {
+  public _id: string;
+  public username: string;
+  public services: Array<Service>;
+}
+
 export function GetUser_O(user: User): User_O {
   let userO: User_O = new User_O();
     userO._id = user._id;
     userO.username = user.username;
+    userO.mail = user.mail;
     return userO;
 }

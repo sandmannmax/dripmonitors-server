@@ -6,7 +6,7 @@ const dbProvider = Container.get(DatabaseProvider);
 
 export namespace ServiceAccessModel {
 
-  export async function FindServiceAccess({userId, serviceName}: {userId: string, serviceName: string}): Promise<Array<ServiceAccess>> {
-    return await dbProvider.Find<ServiceAccess>('service_access', {userId, serviceName});
+  export async function FindServiceAccess({ userId }: {userId: string}): Promise<Array<ServiceAccess>> {
+    return await dbProvider.Find<ServiceAccess>('service_access', { userId });
   }
 }

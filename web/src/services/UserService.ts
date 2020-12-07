@@ -1,43 +1,28 @@
 import { Service } from 'typedi';
 import { sha3_512 } from 'js-sha3'
 import { IResult } from '../types/IResult';
+import { Service as ServiceType } from '../types/Service';
 import { UserModel } from '../models/User';
 import JWT from 'jsonwebtoken';
 import config from '../config';
 import { async } from 'crypto-random-string';
 import { GetUser_O } from '../types/User';
+import { RefreshTokenModel } from '../models/RefreshToken';
+import { ServiceAccessModel } from '../models/ServiceAccess';
+import { ServiceModel } from '../models/Service';
 
 @Service()
 export class UserService {
-  async Login({username, password}: {username: string, password: string}): Promise<IResult> {
-    try {
-      if (username && password) {
-        let user = await UserModel.FindUserByUsername({username});
-        if (user) {          
-          password = sha3_512(password + user.salt + config.pepper);
-          if (user.password == password) {
-            await UserModel.SetValidSession({_id: user._id});
-            const accessToken = this.generateToken({_id: user._id, username: user.username}, '1h');
-            const refreshToken = this.generateToken({_id: user._id, username: user.username, refresh: true}, '24h');
-            return {success: true, data: {user: GetUser_O(user), accessToken, refreshToken}};
-          } else
-            return {success: false, error: {status: 401, message: 'Username or Password Wrong'}};
-        } else
-          return {success: false, error: {status: 401, message: 'Username or Password Wrong'}};
-      } else
-        return {success: false, error: {status: 404, message: 'Username or Password Missing'}};
-    } catch (error) {
-      return {success: false, error};
-    }    
-  }
-
-  async Logout({_id}: {_id: string}): Promise<IResult> {
+  async Get({_id}: {_id: string}): Promise<IResult> {
     try {
       if (_id) {
-        await UserModel.SetInvalidSession({_id});
-        return {success: true, data: {message: 'Logged out successfully'}};
+        let user = await UserModel.FindUser({_id});
+        if (user) {
+          return {success: true, data: {user: GetUser_O(user)}};
+        } else
+          return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: User not found in DB. _id: ${_id}`}};
       } else
-        return {success: false, data: {message: 'User Invalid'}};
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: _id empty.`}};
     } catch (error) {
       return {success: false, error};
     }    
@@ -54,8 +39,12 @@ export class UserService {
             password = sha3_512(password + newSalt + config.pepper);
             let result = await UserModel.CreateUser({username, mail, password, salt: newSalt});
             await UserModel.SetValidSession({_id: result[0]._id});
-            const accessToken = this.generateToken({_id: result[0]._id, username: result[0].username}, '1h');
-            const refreshToken = this.generateToken({_id: result[0]._id, username: result[0].username, refresh: true}, '24h');
+            const accessToken = this.generateToken({_id: result[0]._id, username: result[0].username, services: []}, '1h');
+            let refreshToken: string;
+            do {
+              refreshToken = await async({length: 30});
+            } while (await RefreshTokenModel.CheckDuplicate({ _id: refreshToken }))
+            await RefreshTokenModel.Insert({_id: refreshToken, userId: result[0]._id});
             return {success: true, data: {user: GetUser_O(result[0]), accessToken, refreshToken}};
           } else
             return {success: false, error: {status: 404, message: 'Mail already in use'}};
@@ -68,19 +57,41 @@ export class UserService {
     }    
   }
 
-  async Refresh({refreshToken}: {refreshToken: string}): Promise<IResult> {
+  async Update({_id, username, mail, password, oldPassword}: {_id: string, username: string, mail: string, password: string, oldPassword: string}): Promise<IResult> {
     try {
-      if (refreshToken) {
-        const decoded = JWT.verify(refreshToken, config.jwtSecret);
-        console.log(decoded);
-        if (decoded && decoded.data.refresh)
-        {
-          const accessToken = this.generateToken({_id: decoded.data._id, username: decoded.data.username}, '1h');
-          return {success: true, data: {accessToken}};
-        } else
-          return {success: false, error: {status: 404, message: 'Refresh Token Invalid'}};
-      } else
-        return {success: false, error: {status: 404, message: 'Refresh Token Missing'}};
+      if (!_id)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Update: _id empty.`}};
+      
+      if (!oldPassword)
+        return {success: false, error: {status: 404, message: '\'oldPassword\' missing'}};
+
+      let user = await UserModel.FindUser({_id});
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Update: User missing.`}};
+
+      if (user.password != sha3_512(oldPassword + user.salt + config.pepper)) 
+        return {success: false, error: {status: 401, message: '\'oldPassword\' wrong'}};
+
+      if (username) {
+        await UserModel.UpdateUsername({_id, username});
+        await UserModel.SetInvalidSession({_id});
+      }       
+
+      if (mail) {
+        await UserModel.UpdateMail({_id, mail});
+        await UserModel.SetInvalidSession({_id});
+      }       
+
+      if (password) {
+        await UserModel.UpdatePassword({_id, password});
+        await UserModel.SetInvalidSession({_id});
+      }       
+
+      user = await UserModel.FindUser({_id});
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Update: User missing after change.`}};
+      
+      return {success: true, data: {user: GetUser_O(user)}};
     } catch (error) {
       return {success: false, error};
     }    
@@ -147,6 +158,28 @@ export class UserService {
           return {success: false, error: {status: 404, message: 'Can\'t find user'}};
       } else
         return {success: false, error: {status: 404, message: 'ID or Password Missing'}};
+    } catch (error) {
+      return {success: false, error};
+    }    
+  }
+
+  async GetServices({_id}: {_id: string}): Promise<IResult> {
+    try {
+      if (!_id)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: _id empty.`}}; 
+
+      let user = await UserModel.FindUser({_id});
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: User not found in DB. _id: ${_id}`}}; 
+       
+      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
+
+      let services: Array<ServiceType>;
+
+      for (let i = 0; i < serviceAccesses.length; i++)
+        services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
+
+      return {success: true, data: services};
     } catch (error) {
       return {success: false, error};
     }    

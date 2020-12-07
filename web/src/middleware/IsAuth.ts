@@ -1,4 +1,4 @@
-import JWT from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import config from '../config';
 
 const getTokenFromHeader = (req) => {
@@ -11,9 +11,9 @@ export function IsAuth(req, res, next) {
   try {
     const token = getTokenFromHeader(req);
     if (token) {
-      const decoded = JWT.verify(token, config.jwtSecret);
-      if (decoded && !decoded.data.refresh) {
-        req['token'] = decoded;
+      const decoded = verify(token, config.jwtSecret);
+      if (decoded) {
+        req['user'] = decoded.data;
         next();
       } else
         next({status: 401, message: 'Invalid Token'});

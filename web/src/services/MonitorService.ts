@@ -4,6 +4,9 @@ import { MonitorModel } from '../models/Monitor';
 import { IResult } from '../types/IResult';
 import { GetMonitor_O, Monitor } from '../types/Monitor';
 import { DiscordService } from './DiscordService';
+import { UserJWT } from '../types/User';
+import { User } from 'discord.js';
+import { Service as ServiceType } from '../types/Service';
 
 @Service()
 export class MonitorService {
@@ -13,95 +16,116 @@ export class MonitorService {
     this.discordService = Container.get(DiscordService);
   }
 
-  async GetMonitor({userId}): Promise<IResult> {
+  async GetMonitor({ user }: { user: UserJWT }): Promise<IResult> {
     try {
-      if (userId){
-        let result = await MonitorModel.GetMonitor({userId});
-        let monitor: Monitor;
-        if (result.length == 0){
-          monitor = await MonitorModel.CreateMonitor({userId});
-        } else if (result.length == 1) {
-          monitor = result[0];
-        } else {
-          return {success: false, error: {status: 500, message: 'Can\'t find Monitor'}}
-        }
-        return {success: true, data: {monitor: GetMonitor_O(monitor)}};
-      } else
-        return {success: false, error: {status: 401, message: 'UserID Missing'}};      
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};      
+
+      let result = await MonitorModel.GetMonitor({ userId: user._id });
+      let monitor: Monitor;
+      if (result.length == 0){
+        return {success: false, error: {status: 404, message: 'Object is not existing.'}};
+      } else if (result.length == 1) {
+        monitor = result[0];
+      } else {
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: Found more than one monitor for userId = ${user._id}`}};
+      }
+      return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {
       return {success: false, error};
     }
   }
 
-  async UpdateBotImage({userId, botImage}): Promise<IResult> {
+  async CreateMonitor({ user }: { user: UserJWT }): Promise<IResult> {
     try {
-      if (userId && botImage) {
-        let result = await MonitorModel.GetMonitor({userId});
-        if (result.length == 1) {
-          let monitor = await MonitorModel.UpdateBotImage({userId, botImage});
-          return {success: true, data: {monitor: GetMonitor_O(monitor)}};
-        } else      
-          return {success: false, error: {status: 404, message: 'Can\'t find Monitor'}}
-      } else
-        return {success: false, error: {status: 404, message: 'botImage Missing'}};  
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};      
+
+      let result = await MonitorModel.GetMonitor({ userId: user._id });
+      let monitor: Monitor;
+      if (result.length == 1){
+        return {success: false, error: {status: 404, message: 'Object is already existing.'}};
+      } else if (result.length == 0) {
+        monitor = await MonitorModel.CreateMonitor({ userId: user._id });
+      } else {
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: Found more than one monitor for userId = ${user._id}`}};
+      }
+      return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {
       return {success: false, error};
     }
   }
 
-  async UpdateBotName({userId, botName}): Promise<IResult> {
+  async UpdateMonitor({ user, webHook, name, imageUrl }: { user: UserJWT, webHook: string, name: string, imageUrl: string }): Promise<IResult> {
     try {
-      if (userId && botName) {
-        let result = await MonitorModel.GetMonitor({userId});
-        if (result.length == 1) {
-          let monitor = await MonitorModel.UpdateBotName({userId, botName});
-          return {success: true, data: {monitor: GetMonitor_O(monitor)}};
-        } else      
-          return {success: false, error: {status: 404, message: 'Can\'t find Monitor'}}
-      } else
-        return {success: false, error: {status: 404, message: 'botName Missing'}};  
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.UpdateMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};     
+
+      let result = await MonitorModel.GetMonitor({ userId: user._id });
+
+      if (result.length == 0)
+        return {success: false, error: {status: 404, message: 'Object is not existing.'}};
+      
+      if (result.length > 1)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.UpdateMonitor: Found more than one monitor for userId = ${user._id}`}};
+      
+      let monitor = result[0];
+
+      if (webHook)
+        monitor = await MonitorModel.UpdateWebhook({ userId: user._id, webHook });
+
+      if (name)
+        await MonitorModel.UpdateBotName({ userId: user._id, botName: name });
+
+      if (imageUrl)
+        await MonitorModel.UpdateBotImage({ userId: user._id, botImage: imageUrl });
+      
+      return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {
       return {success: false, error};
     }
   }
 
-  async UpdateWebhook({userId, webHook}: {userId: string, webHook: string}): Promise<IResult> {
+  async SendTestMessage({ user }: { user: UserJWT }): Promise<IResult> {
     try {
-      if (userId && webHook) {
-        if (webHook.match('https:\/\/discord.com\/api\/webhooks\/([^\/]+)\/([^\/]+)')) {
-          let result = await MonitorModel.GetMonitor({userId});
-          if (result.length == 1) {
-            let monitor = await MonitorModel.UpdateWebhook({userId, webHook});
-            return {success: true, data: {monitor: GetMonitor_O(monitor)}};
-          } else      
-            return {success: false, error: {status: 404, message: 'Can\'t find Monitor'}}
-        } else      
-          return {success: false, error: {status: 404, message: 'No Valid Webhook'}}
-      } else
-        return {success: false, error: {status: 404, message: 'webHook Missing'}};  
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.SendTestMessage: User empty`}};
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};    
 
-  async TestMessage({userId}): Promise<IResult> {
-    try {
-      if (userId) {
-        let result = await MonitorModel.GetMonitor({userId});
-        if (result.length == 1) {
-          let monitor = result[0];
-          if (monitor.webHook)
-            return this.discordService.SendTestMessage({webHook: monitor.webHook, botName: monitor.botName, botImage: monitor.botImage});
-          else
-            return {success: false, error: {status: 404, message: 'Webhook for this Monitor isn\'t configured'}}
-        } else      
-          return {success: false, error: {status: 404, message: 'Can\'t find Monitor'}}
-      } else
-        return {success: false, error: {status: 404, message: 'webHook Missing'}};  
+      let result = await MonitorModel.GetMonitor({ userId : user._id });
+
+      if (result.length == 0)
+        return {success: false, error: {status: 404, message: 'Monitor is not existing.'}};
+      
+      if (result.length > 1)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.SendTestMessage: Found more than one monitor for userId = ${user._id}`}};
+      
+      let monitor = result[0];
+
+      if (!monitor.webHook)
+        return {success: false, error: {status: 404, message: 'Monitor Webhook is not configured.'}};
+        
+      return this.discordService.SendTestMessage({webHook: monitor.webHook, botName: monitor.botName, botImage: monitor.botImage});
     } catch (error) {
       return {success: false, error};
     }
-  
-  
   }
+}
+
+function hasMonitorPermission(user: UserJWT) {
+  return user.services.filter(object => object.name.toLowerCase() === "monitor").length != 0
 }
