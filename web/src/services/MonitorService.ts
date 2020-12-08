@@ -124,8 +124,26 @@ export class MonitorService {
       return {success: false, error};
     }
   }
+
+  async GetSupportedProducts({ user }: { user: UserJWT }): Promise<IResult> {
+    try {
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetSupportedProducts: User empty`}};
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};    
+
+      let products = await MonitorModel.GetProducts();
+              
+      return {success: true, data: products};
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
 }
 
 function hasMonitorPermission(user: UserJWT) {
+  if (!user || !user.services)
+    return false;
   return user.services.filter(object => object.name.toLowerCase() === "monitor").length != 0
 }

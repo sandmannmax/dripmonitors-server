@@ -6,9 +6,13 @@ const dbProvider = Container.get(DatabaseProvider);
 
 export namespace ServiceModel {
 
+  export async function GetServices(): Promise<Array<Service>> {
+    return await dbProvider.Find<Service>('services', {});
+  }
+
   export async function FindService({ _id }: {_id: string}): Promise<Service> {
     let result = await dbProvider.Find<Service>('services', { _id });
-    if (result.length == 0)
+    if (result.length == 1)
       return result[0];
     else
       return undefined;

@@ -2,6 +2,7 @@ import { UserRoutes } from './UserRoutes';
 import { AuthRoutes } from './AuthRoutes';
 import { Router } from 'express';
 import { MonitorRoutes } from "./MonitorRoutes";
+import { ServiceRoutes } from "./ServiceRoutes";
 import sanitize from 'sanitize';
 
 let router = Router({strict: true});
@@ -16,6 +17,9 @@ router.use('/auth', authRoutes.GetRouter());
 
 let monitorRoutes = new MonitorRoutes();
 router.use('/monitor', monitorRoutes.GetRouter());
+
+let serviceRoutes = new ServiceRoutes();
+router.use('/services', serviceRoutes.GetRouter());
 
 export default () => {
   return router;

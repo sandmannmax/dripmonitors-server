@@ -24,8 +24,8 @@ export namespace RefreshTokenModel {
       return undefined;
   }
 
-  export async function CheckDuplicate({_id}: {_id: string }): Promise<boolean> {
+  export async function CheckIsDuplicate({_id}: {_id: string }): Promise<boolean> {
     const result = await dbProvider.Find<RefreshToken>('refresh_tokens', {_id});
-    return result.length == 0;
+    return result.length != 0;
   }
 }

@@ -1,8 +1,11 @@
 import { Container } from 'typedi';
 import { DatabaseProvider } from '../provider/DatabaseProvider';
+import { RedisProvider } from '../provider/RedisProvider';
 import { Monitor } from '../types/Monitor';
+import { Product } from '../types/Product';
 
 const dbProvider = Container.get(DatabaseProvider);
+const redisProvider = Container.get(RedisProvider);
 
 export namespace MonitorModel {
 
@@ -32,5 +35,24 @@ export namespace MonitorModel {
     await dbProvider.Update('monitors', {userId}, {webHook});
     let result = await dbProvider.Find<Monitor>('monitors', {userId});
     return result[0];
+  }
+
+  export async function GetProducts(): Promise<Array<Product>> {
+    let products: Array<Product> = [];
+    let shops = await redisProvider.GetSetMembers('stores');
+    for (let i = 0; i < shops.length; i++) {
+      let shopProducts = await redisProvider.GetSetMembers(`stores:${shops[i]}:products`);
+      for (let j = 0; j < shopProducts.length; j++) {
+        let item = await redisProvider.GetHashAll(`stores:${shops[i]}:products:${shopProducts[j]}`);
+        let product = new Product();
+        product._id = shopProducts[j];
+        product.name = item.name;
+        product.site = shops[i];
+        product.url = item.href;
+        product.soldOut = item.soldOut == 'true';
+        products.push(product);
+      }
+    }
+    return products;
   }
 }

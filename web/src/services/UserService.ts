@@ -42,8 +42,8 @@ export class UserService {
             const accessToken = this.generateToken({_id: result[0]._id, username: result[0].username, services: []}, '1h');
             let refreshToken: string;
             do {
-              refreshToken = await async({length: 30});
-            } while (await RefreshTokenModel.CheckDuplicate({ _id: refreshToken }))
+              refreshToken = await async({length: 24});
+            } while (await RefreshTokenModel.CheckIsDuplicate({ _id: refreshToken }))
             await RefreshTokenModel.Insert({_id: refreshToken, userId: result[0]._id});
             return {success: true, data: {user: GetUser_O(result[0]), accessToken, refreshToken}};
           } else

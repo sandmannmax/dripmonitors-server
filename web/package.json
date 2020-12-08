@@ -1,10 +1,9 @@
 {
-  "name": "lazymonitor",
+  "name": "api",
   "version": "1.0.0",
   "scripts": {
     "start": "ts-node ./src/index.ts"
   },
-  "author": "",
   "dependencies": {
     "cluster": "^0.7.7",
     "cors": "^2.8.5",
@@ -12,11 +11,13 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "handy-redis": "^2.0.3",
     "http": "0.0.1-security",
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "^8.5.1",
     "monk": "^7.3.2",
     "os": "^0.1.1",
+    "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "sanitize": "^2.1.0",
     "ts-node": "^9.1.0",
