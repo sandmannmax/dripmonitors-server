@@ -140,6 +140,116 @@ export class MonitorService {
       return {success: false, error};
     }
   }
+
+  async GetMonitoredItems({ user }: { user: UserJWT }): Promise<IResult> {
+    try {
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}};      
+
+      let result = await MonitorModel.GetMonitoredItems({ userId: user._id });
+
+      return {success: true, data: result};
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
+
+  async CreateMonitoredItem({ user, price, productId, site }: { user: UserJWT, price: number, productId: string, site: string }): Promise<IResult> {
+    try {
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}}; 
+        
+      if (!price)
+        return {success: false, error: {status: 404, message: '\'price\' missing'}};
+        
+      if (typeof price != 'number')
+        return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
+        
+      if (!productId)
+        return {success: false, error: {status: 404, message: '\'productId\' missing'}};
+        
+      if (!site)
+        return {success: false, error: {status: 404, message: '\'site\' missing'}};
+
+      if (!await MonitorModel.IsProductValid({ site, productId }))
+        return {success: false, error: {status: 404, message: '\'site\' or \'productId\' is invalid'}};
+
+      if (await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
+        return {success: false, error: {status: 404, message: 'Product is already monitored'}};
+
+      let result = await MonitorModel.AddMonitoredItem({ userId: user._id, site, productId, price });
+      
+      return {success: true, data: result};
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
+
+  async UpdateMonitoredItem({ user, price, productId, site }: { user: UserJWT, price: number, productId: string, site: string }): Promise<IResult> {
+    try {
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}}; 
+        
+      if (!price)
+        return {success: false, error: {status: 404, message: '\'price\' missing'}};
+        
+      if (typeof price != 'number')
+        return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
+        
+      if (!site)
+        return {success: false, error: {status: 404, message: '\'site\' missing'}};
+
+      if (!await MonitorModel.IsProductValid({ site, productId }))
+        return {success: false, error: {status: 404, message: '\'site\' or \'id\' is invalid'}};
+
+      if (!await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
+        return {success: false, error: {status: 404, message: 'Product is not monitored'}};
+
+      let result = await MonitorModel.UpdateMonitoredItem({ userId: user._id, site, productId, price });
+      
+      return {success: true, data: result};
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
+
+  async DeleteMonitoredItem({ user, productId, site }: { user: UserJWT, productId: string, site: string }): Promise<IResult> {
+    try {
+      if (!user)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
+
+      
+      if (!hasMonitorPermission(user))
+        return {success: false, error: {status: 403}}; 
+        
+      if (!site)
+        return {success: false, error: {status: 404, message: '\'site\' missing'}};
+
+      if (!await MonitorModel.IsProductValid({ site, productId }))
+        return {success: false, error: {status: 404, message: '\'site\' or \'id\' is invalid'}};
+
+      if (!await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
+        return {success: false, error: {status: 404, message: 'Product is not monitored'}};
+
+      await MonitorModel.DeleteMonitoredItem({ userId: user._id, site, productId });
+      
+      return {success: true, data: { message: 'Deleted monitored Item'}};
+    } catch (error) {
+      return {success: false, error};
+    }
+  }
 }
 
 function hasMonitorPermission(user: UserJWT) {

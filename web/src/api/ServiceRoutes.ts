@@ -28,7 +28,8 @@ export class ServiceRoutes {
     this.router.post('/:id/buy', IsAuth, async (req, res, next) => {
       let user: UserJWT = req['user'];
       let id = req.params.id;
-      let result = await this.serviceService.Buy({ user, id });
+      let { serviceAccessKey } = req.body;
+      let result = await this.serviceService.Buy({ user, id, serviceAccessKey });
       if (result.success)
         res.json(result.data);
       else if (result.error)

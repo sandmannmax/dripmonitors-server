@@ -13,7 +13,7 @@ export default async (app: Application) => {
 
   app.use(json());
   app.use(cors());
-  app.use('/', api());
+  app.use('/api', api());
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     let err: IError = {message: 'Not Found', status: 404};
@@ -26,9 +26,12 @@ export default async (app: Application) => {
       if (err.status == undefined || (err.status && err.status >= 500))
         logger.error('Error', err);
       res.status(err.status || 500);
-      res.json({error: {
-        message: err.message
-      }});
+      if (err.status == 403 && (!err || !err.message))
+        res.end();
+      else
+        res.json({error: {
+          message: err.message
+        }});
     }    
   });
 

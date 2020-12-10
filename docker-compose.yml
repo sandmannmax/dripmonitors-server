@@ -1,6 +1,16 @@
 version: '3.4'
 
 services:
+  reverse-proxy:
+    image: nginx:1.19.5
+    depends_on:
+      - api
+    links:
+      - api
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
   api:
     image: lsb-api
     depends_on:
@@ -11,13 +21,8 @@ services:
       - redis
     volumes:
       - ./web/src:/usr/src/app/src
-    ports:
-      - 3000:3000
-    environment:
-      - PORT=3000
-      - DB_CONNECTION=db:27017/lazyshoebotdb
-      - TOKEN_SECRET=1aWH4OpjF7yi7o6kzAsugxFaiNPS42Ma
-      - PEPPER=4jpXTUuGbKWSvVVkNq6m
+    env_file: 
+      - .env
   monitor:
     image: lsb-monitor
     depends_on:
@@ -32,6 +37,8 @@ services:
       - dbVolume:/data/db
     ports:
       - 27017:27017
+    env_file: 
+      - .env
   redis:
     image: redis
     volumes:

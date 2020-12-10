@@ -9,8 +9,12 @@ export class RedisProvider {
     this.Client = createNodeRedisClient({ host: 'redis' });
   }
 
-  async GetSetMembers(key) {
-    return await this.Client.smembers(key);
+  async GetSetMembers(key): Promise<Array<any>> {
+    let members = await this.Client.smembers(key);
+    if (members != null)
+      return members;
+    else
+      return [];
   }
   
   async IsSetMember(key, value) {
@@ -21,11 +25,23 @@ export class RedisProvider {
     await this.Client.sadd(key, value);
   }
 
-  async DeleteSetMember(key) {
-    await this.Client.spop(key);
+  async DeleteSetMember(key, member) {
+    await this.Client.srem(key, member);
+  }
+
+  async IsSetEmpty(key) {
+    return await this.Client.scard(key) == 0;
   }
   
   async GetHashAll(key) {
     return await this.Client.hgetall(key);
+  }
+
+  async SetHash(key, values) {
+    return await this.Client.hmset(key, values);
+  }
+
+  async DeleteHash(key, values) {
+    return await this.Client.hdel(key, values);
   }
 }
