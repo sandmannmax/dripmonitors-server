@@ -7,7 +7,13 @@ export class DatabaseProvider {
   private Database: IMonkManager;
 
   constructor() {
-    this.Database = DB(config.databaseConnection);
+    this.Database = DB(config.databaseConnection, {
+      auth: {
+        user: config.databaseUser,
+        password: config.databasePassword
+      },
+      authSource: 'admin'
+    });
   }
 
   async Find<T>(collectionName: string, query: Object, options?: FindOptions<any>): Promise<Array<T>> {
