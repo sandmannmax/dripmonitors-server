@@ -179,7 +179,7 @@ export class UserService {
       for (let i = 0; i < serviceAccesses.length; i++)
         services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
 
-      return {success: true, data: services};
+      return {success: true, data: { services }};
     } catch (error) {
       return {success: false, error};
     }    

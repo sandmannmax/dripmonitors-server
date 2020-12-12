@@ -13,7 +13,7 @@ export class ServiceService {
   async Get(): Promise<IResult> {
     try {
       let services = await ServiceModel.GetServices();
-      return {success: true, data: services};
+      return {success: true, data: { services }};
     } catch (error) {
       return {success: false, error};
     }
@@ -42,7 +42,7 @@ export class ServiceService {
         services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
 
       const accessToken = this.generateToken({_id: user._id, username: user.username, services}, '1h');
-      return {success: true, data: {accessToken}};
+      return {success: true, data: { accessToken }};
     } catch (error) {
       return {success: false, error};
     }

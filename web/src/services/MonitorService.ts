@@ -20,7 +20,6 @@ export class MonitorService {
     try {
       if (!user)
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-
       
       if (!hasMonitorPermission(user))
         return {success: false, error: {status: 403}};      
@@ -44,7 +43,6 @@ export class MonitorService {
     try {
       if (!user)
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: User empty`}};
-
       
       if (!hasMonitorPermission(user))
         return {success: false, error: {status: 403}};      
@@ -135,7 +133,7 @@ export class MonitorService {
 
       let products = await MonitorModel.GetProducts();
               
-      return {success: true, data: products};
+      return {success: true, data: { products }};
     } catch (error) {
       return {success: false, error};
     }
@@ -152,7 +150,7 @@ export class MonitorService {
 
       let result = await MonitorModel.GetMonitoredItems({ userId: user._id });
 
-      return {success: true, data: result};
+      return {success: true, data: { items: result }};
     } catch (error) {
       return {success: false, error};
     }
@@ -187,7 +185,7 @@ export class MonitorService {
 
       let result = await MonitorModel.AddMonitoredItem({ userId: user._id, site, productId, price });
       
-      return {success: true, data: result};
+      return {success: true, data: { item: result }};
     } catch (error) {
       return {success: false, error};
     }
@@ -219,7 +217,7 @@ export class MonitorService {
 
       let result = await MonitorModel.UpdateMonitoredItem({ userId: user._id, site, productId, price });
       
-      return {success: true, data: result};
+      return {success: true, data: { item: result }};
     } catch (error) {
       return {success: false, error};
     }

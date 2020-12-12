@@ -5,12 +5,14 @@ services:
     image: nginx:1.19.5
     depends_on:
       - api
+      - frontend
     links:
       - api
+      - frontend
     ports:
       - 80:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.dev.conf
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf
   api:
     image: lsb-api
     depends_on:
@@ -23,6 +25,10 @@ services:
       - ./web/src:/usr/src/app/src
     env_file: 
       - .env
+  frontend:
+    image: lsb-frontend
+    volumes:
+      - ./frontend/src:/app/src
   monitor:
     image: lsb-monitor
     depends_on:
@@ -34,7 +40,7 @@ services:
   db:
     image: mongo
     volumes:
-      - dbVolume:/data/db
+      - mongoVolume:/data/db
     ports:
       - 27017:27017
     env_file: 
@@ -51,5 +57,5 @@ services:
      - 8001:8001
 
 volumes:
-  dbVolume:
+  mongoVolume:
   redisVolume:

@@ -1,4 +1,4 @@
-# frontend
+# lazyshoebot
 
 ## Project setup
 ```

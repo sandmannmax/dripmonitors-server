@@ -29,9 +29,7 @@ export default async (app: Application) => {
       if (err.status == 403 && (!err || !err.message))
         res.end();
       else
-        res.json({error: {
-          message: err.message
-        }});
+        res.json({message: err.message});
     }    
   });
 
