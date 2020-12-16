@@ -2,13 +2,34 @@
   <div class="home">
     <div class="container">
       <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" v-if="user">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body">
-              <h5 class="card-title text-center">Profil</h5>
-              <div>Benutzername: {{ user.name }}</div>
-              <div>Mail: {{ user.mail }}</div>
-              <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Ausloggen</button>
+              <h5 class="card-title text-center">Registrieren</h5>
+              <form class="form-signin" v-if="!user">
+                <div class="form-label-group">
+                  <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
+                  <label for="inputUsername">Benutzername</label>
+                </div>
+
+                <div class="form-label-group">
+                  <input type="text" id="inputMail" class="form-control" v-model="input.mail" placeholder="E-Mail Adresse" required autofocus>
+                  <label for="inputMail">E-Mail Adresse</label>
+                </div>
+
+                <div class="form-label-group">
+                  <input type="password" id="inputPassword" class="form-control" v-model="input.password" placeholder="Passwort" required>
+                  <label for="inputPassword">Passwort</label>
+                </div>
+
+                <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="registerForm()">Registrieren</button>
+              </form>                      
+              <div class="divCenterMargin">
+                <div>{{ error }}</div>
+              </div>
+              <div class="divCenterMargin">
+                Schon einen Account? <router-link to="/login">Hier</router-link> anmelden.
+              </div>
             </div>
           </div>
         </div>
@@ -22,19 +43,41 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
 @Component
-export default class Profile extends Vue {
-  @Action logout;
+export default class Register extends Vue {
+  @Action register;
   @Getter user;
 
   mounted() {
-    if (!this.user)
-      this.$router.push('login');
+    if (this.user)
+      this.$router.push('/profile');
   }
 
-  async logoutForm() {
-    await this.logout({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-    if (!this.user)
-      this.$router.push('/');
+  input = {
+    username: '',
+    mail: '',
+    password: ''
+  };
+  error = ''
+
+  async registerForm() {
+    if (this.input.username == '') {
+      this.error = 'Bitte geben Sie einen Benutzernamen ein.';
+      return;
+    }
+
+    if (this.input.mail == '') {
+      this.error = 'Bitte geben Sie eine E-Mail Adresse ein.';
+      return;
+    }
+
+    if (this.input.password == '') {
+      this.error = 'Bitte geben Sie ein Passwort ein.';
+      return;
+    }
+
+    this.error = await this.register({ username: this.input.username, mail: this.input.mail, password: this.input.password });
+    if (this.user)
+      this.$router.push({name: 'home'});
   }
 }
 </script>
@@ -141,7 +184,7 @@ export default class Profile extends Vue {
     color: #777;
   }
 
-  .error-fields {
+  .divCenterMargin {
     margin-top: 8px;
     text-align: center;
   }
@@ -152,7 +195,6 @@ export default class Profile extends Vue {
   }
 
   .btnClass {
-    margin-top: 20px;
     color: white;
     background-color: #db3e3e;
   }

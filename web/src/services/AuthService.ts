@@ -6,8 +6,6 @@ import JWT from 'jsonwebtoken';
 import config from '../config';
 import { GetUser_O } from '../types/User';
 import { ServiceAccessModel } from '../models/ServiceAccess';
-import { ServiceModel } from '../models/Service';
-import { Service as ServiceType } from '../types/Service';
 import { async } from 'crypto-random-string';
 import { RefreshTokenModel } from '../models/RefreshToken';
 
@@ -23,9 +21,9 @@ export class AuthService {
             await UserModel.SetValidSession({_id: user._id});
 
             let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id.toString() });
-            let services: Array<ServiceType> = [];
+            let services: Array<string> = [];
             for (let i = 0; i < serviceAccesses.length; i++)
-              services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
+              services.push(serviceAccesses[i].service);
 
             const accessToken = this.generateToken({_id: user._id, username: user.username, services}, '1h');
             let refreshToken: string;
@@ -62,6 +60,11 @@ export class AuthService {
       if (!refreshToken)
         return {success: false, error: {status: 400, message: '\'refreshToken\' missing'}};
 
+      let refreshTokenRegex = new RegExp("^[0-9a-fA-F]{24}$");
+
+      if (!refreshTokenRegex.test(refreshToken))
+        return {success: false, error: {status: 400, message: '\'refreshToken\' invalid'}};
+
       const rt = await RefreshTokenModel.Find({ _id: refreshToken });
       const now = Number((Date.now()/1000).toString().split('.')[0]);
 
@@ -77,9 +80,9 @@ export class AuthService {
         return {success: false, error: {status: 400, message: '\'refreshToken\' invalid'}};
 
       let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id.toString() });
-      let services: Array<ServiceType> = [];
+      let services: Array<string> = [];
       for (let i = 0; i < serviceAccesses.length; i++)
-        services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
+        services.push(serviceAccesses[i].service);
 
       const accessToken = this.generateToken({_id: user._id, username: user.username, services}, '1h');
 

@@ -5,8 +5,11 @@
     "start": "ts-node ./src/index.ts"
   },
   "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
     "handy-redis": "^2.0.3",
     "jssoup": "0.0.12",
+    "monk": "^7.3.2",
     "node-fetch": "^2.6.1",
     "redis": "^3.0.2",
     "ts-node": "^9.1.1",

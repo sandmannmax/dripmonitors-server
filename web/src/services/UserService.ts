@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { sha3_512 } from 'js-sha3'
 import { IResult } from '../types/IResult';
-import { Service as ServiceType } from '../types/Service';
 import { UserModel } from '../models/User';
 import JWT from 'jsonwebtoken';
 import config from '../config';
@@ -9,7 +8,6 @@ import { async } from 'crypto-random-string';
 import { GetUser_O } from '../types/User';
 import { RefreshTokenModel } from '../models/RefreshToken';
 import { ServiceAccessModel } from '../models/ServiceAccess';
-import { ServiceModel } from '../models/Service';
 
 @Service()
 export class UserService {
@@ -167,17 +165,13 @@ export class UserService {
     try {
       if (!_id)
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: _id empty.`}}; 
-
-      let user = await UserModel.FindUser({_id});
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: User not found in DB. _id: ${_id}`}}; 
        
-      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
+      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: _id });
 
-      let services: Array<ServiceType>;
+      let services: Array<string> = [];
 
       for (let i = 0; i < serviceAccesses.length; i++)
-        services.push(await ServiceModel.FindService({ _id: serviceAccesses[i].serviceId }));
+        services.push(serviceAccesses[i].service);
 
       return {success: true, data: { services }};
     } catch (error) {

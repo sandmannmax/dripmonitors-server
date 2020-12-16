@@ -1,15 +1,20 @@
 <template>
-  <b-navbar type="dark" id="navbar">
+  <b-navbar type="dark" id="navbar" toggleable="sm">
     <b-container>
       <b-navbar-nav>
-        <router-link to="/" class="navbar-brand title" id="title">LSB</router-link>
-        <router-link class="linkL" to="/monitor" v-if="user.loggedIn">Monitor</router-link>
+        <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
       </b-navbar-nav>
-      <b-navbar-nav class="ml-auto">
-        <router-link class="link" to="/profile" v-if="user.loggedIn">Hallo, {{ user.name }}</router-link>
-        <router-link class="linkR" to="/login" v-else>Login</router-link>
-        <button class="btn btnCall" v-if="!user.loggedIn">Hol dir den Monitor</button>
-      </b-navbar-nav>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <router-link class="link" to="/monitor" v-if="user && hasMonitor">Monitor</router-link>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto">
+          <router-link class="link" to="/profile" v-if="user">Hallo, {{ user.name }}</router-link>
+          <router-link class="link" to="/login" v-else>Einloggen</router-link>
+          <router-link class="link" to="/register" v-if="!user">Registrieren</router-link>
+        </b-navbar-nav>
+      </b-collapse>
     </b-container>
   </b-navbar>
 </template>
@@ -21,6 +26,7 @@ import { Getter } from 'vuex-class';
 @Component
 export default class ControlBar extends Vue {
   @Getter user;
+  @Getter hasMonitor;
 }
 </script>
 
@@ -28,17 +34,7 @@ export default class ControlBar extends Vue {
 
 .link {
   color: white;
-  margin: auto 0px;
-}
-
-.linkL {
-  color: white;
-  margin: auto 0px auto 20px;
-}
-
-.linkR {
-  color: white;
-  margin: auto 20px auto 0px;
+  margin: auto 10px;
 }
 
 .btnCall {

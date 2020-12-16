@@ -51,13 +51,14 @@ export namespace MonitorModel {
         let item = await redisProvider.GetHashAll(`users:${userId}:${monitoredStores[i]}:${monitoredItems[j]}`);
         let productItem = await redisProvider.GetHashAll(`stores:${monitoredStores[i]}:products:${monitoredItems[j]}`);
         let monitoredProduct = new MonitoredProduct();
-        monitoredProduct._id = monitoredItems[i];
+        monitoredProduct._id = monitoredItems[j];
         monitoredProduct.price = Number(item.price);
         let product = new Product();
         product._id = monitoredItems[j];
         product.name = productItem.name;
         product.site = monitoredStores[i];
         product.url = productItem.href;
+        product.active = productItem.active == 'true';
         product.soldOut = productItem.soldOut == 'true';
         monitoredProduct.product = product;
         monitoredProducts.push(monitoredProduct);
@@ -175,6 +176,7 @@ export namespace MonitorModel {
         product.name = item.name;
         product.site = shops[i];
         product.url = item.href;
+        product.active = item.active == 'true';
         product.soldOut = item.soldOut == 'true';
         products.push(product);
       }

@@ -4,4 +4,5 @@ export class Product {
   public url: string;
   public site: string;
   public soldOut: boolean;
+  public active: boolean;
 }

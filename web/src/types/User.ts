@@ -1,5 +1,3 @@
-import { Service } from "./Service";
-
 export class User_O {
   public _id: string;
   public username: string;
@@ -18,7 +16,7 @@ export class User {
 export class UserJWT {
   public _id: string;
   public username: string;
-  public services: Array<Service>;
+  public services: Array<string>;
 }
 
 export function GetUser_O(user: User): User_O {

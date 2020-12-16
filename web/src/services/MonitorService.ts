@@ -5,8 +5,9 @@ import { IResult } from '../types/IResult';
 import { GetMonitor_O, Monitor } from '../types/Monitor';
 import { DiscordService } from './DiscordService';
 import { UserJWT } from '../types/User';
-import { User } from 'discord.js';
-import { Service as ServiceType } from '../types/Service';
+import JWT from 'jsonwebtoken';
+import { ServiceAccessModel } from '../models/ServiceAccess';
+import config from '../config';
 
 @Service()
 export class MonitorService {
@@ -39,24 +40,43 @@ export class MonitorService {
     }
   }
 
-  async CreateMonitor({ user }: { user: UserJWT }): Promise<IResult> {
+  async CreateMonitorAccess({ user, serviceAccessKey }: { user: UserJWT, serviceAccessKey: string }): Promise<IResult> {
     try {
       if (!user)
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: User empty`}};
+
+      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
+    
+      if (serviceAccesses.filter(obj => obj.service == 'monitor').length != 0)
+        return {success: false, error: {status: 400, message: 'You already own this Service'}};
+
+      if (!serviceAccessKey)
+        return {success: false, error: {status: 400, message: '\'serviceAccessKey\' is missing'}};
       
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};      
+      if (!await ServiceAccessModel.CheckServiceAccessKey({ serviceAccessKey, service: 'monitor' }))
+        return {success: false, error: {status: 400, message: '\'serviceAccessKey\' is invalid or already used'}};
+
+      await ServiceAccessModel.UseServiceAccessKey({ serviceAccessKey });
+
+      await ServiceAccessModel.CreateServiceAccess({ userId: user._id, service: 'monitor' });
+
+      serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
+      let services: Array<string> = [];
+      for (let i = 0; i < serviceAccesses.length; i++)
+        services.push(serviceAccesses[i].service);
+
+      const accessToken = generateToken({_id: user._id, username: user.username, services}, '1h');
 
       let result = await MonitorModel.GetMonitor({ userId: user._id });
       let monitor: Monitor;
       if (result.length == 1){
-        return {success: false, error: {status: 404, message: 'Object is already existing.'}};
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: 'Monitor is already existing.'}};
       } else if (result.length == 0) {
         monitor = await MonitorModel.CreateMonitor({ userId: user._id });
       } else {
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: Found more than one monitor for userId = ${user._id}`}};
       }
-      return {success: true, data: {monitor: GetMonitor_O(monitor)}};
+      return {success: true, data: {monitor: GetMonitor_O(monitor), accessToken}};
     } catch (error) {
       return {success: false, error};
     }
@@ -168,8 +188,13 @@ export class MonitorService {
       if (!price)
         return {success: false, error: {status: 404, message: '\'price\' missing'}};
         
-      if (typeof price != 'number')
-        return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
+      if (typeof price != 'number') {
+        try {
+          price = Number(price);
+        } catch {
+          return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
+        }
+      }
         
       if (!productId)
         return {success: false, error: {status: 404, message: '\'productId\' missing'}};
@@ -250,8 +275,12 @@ export class MonitorService {
   }
 }
 
+function generateToken(data, expiration: string) {
+  return JWT.sign({data}, config.jwtSecret, { expiresIn: expiration });
+}
+
 function hasMonitorPermission(user: UserJWT) {
   if (!user || !user.services)
     return false;
-  return user.services.filter(object => object.name.toLowerCase() === "monitor").length != 0
+  return user.services.filter(object => object === "monitor").length != 0
 }

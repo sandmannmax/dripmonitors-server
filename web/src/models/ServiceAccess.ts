@@ -11,12 +11,12 @@ export namespace ServiceAccessModel {
     return await dbProvider.Find<ServiceAccess>('service_access', { userId });
   }
 
-  export async function CreateServiceAccess({ userId, serviceId }: {userId: string, serviceId: string}): Promise<void> {
-    await dbProvider.Insert('service_access', { userId, serviceId });
+  export async function CreateServiceAccess({ userId, service }: {userId: string, service: string}): Promise<void> {
+    await dbProvider.Insert('service_access', { userId, service });
   }
 
-  export async function CheckServiceAccessKey({ serviceAccessKey }: {serviceAccessKey: string}): Promise<boolean> {
-    return (await dbProvider.Find<ServiceAccessKey>('service_access_keys', { key: serviceAccessKey, used: false })).length != 0;
+  export async function CheckServiceAccessKey({ serviceAccessKey, service }: {serviceAccessKey: string, service: string}): Promise<boolean> {
+    return (await dbProvider.Find<ServiceAccessKey>('service_access_keys', { key: serviceAccessKey, used: false, service })).length != 0;
   }
 
   export async function UseServiceAccessKey({ serviceAccessKey }: {serviceAccessKey: string}): Promise<void> {

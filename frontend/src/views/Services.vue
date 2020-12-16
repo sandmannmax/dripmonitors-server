@@ -1,40 +1,77 @@
 <template>
-  <div class="home">
+  <div>
     <div class="container">
-      <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" v-if="user">
+      <div class="row" v-for="service in services" v-bind:key="service._id">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body">
-              <h5 class="card-title text-center">Profil</h5>
-              <div>Benutzername: {{ user.name }}</div>
-              <div>Mail: {{ user.mail }}</div>
-              <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Ausloggen</button>
+              <h5 class="card-title text-center">{{ service.name }}</h5>
+              <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="getAccess(service._id, service.name)">Zugriff bekommen</button>
             </div>
           </div>
         </div>
       </div>
+      <b-modal id="getServiceAccessModal" hide-header hide-footer centered>
+        <form @submit.stop.prevent="getAccessWithKey" class="text-center formMargin">    
+          <div class="form-label-group">
+            <input type="text" id="inputAccessKey" class="form-control" v-model="accessKey" placeholder="Access-Key" required autofocus>
+            <label for="inputAccessKey">Access-Key</label>
+          </div>
+          <button class="btn btn-sm btnClass btn-block text-uppercase">Zugriff bekommen</button>
+          <div class="errorField">{{ error }}</div>
+        </form>
+      </b-modal>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+import { Getter, Action } from 'vuex-class';
 
 @Component
-export default class Profile extends Vue {
-  @Action logout;
+export default class Services extends Vue {
   @Getter user;
+  @Getter services;
+  @Getter servicesAccess;
+  @Action getServices;
+  @Action buyService;
+  @Action getServicesAccess;
+
+  accessKey = '';
+  selectedServiceId = undefined;
+  error = '';
 
   mounted() {
-    if (!this.user)
+    if (this.services.length == 0)
+      this.getServices();
+  }
+
+  getAccess(id, name) {
+    if (this.user) {
+      let alreadyOwned = false;
+      for (let i = 0; i < this.servicesAccess.length; i++){
+        if (this.servicesAccess[i]._id === id)
+          alreadyOwned = true;
+      }
+      if (alreadyOwned)
+        console.log('Already Owned');
+      else {
+        this.accessKey = '';
+        this.error = '';
+        this.selectedServiceId = id;
+        this.$bvModal.show('getServiceAccessModal');
+      }
+    } else
       this.$router.push('login');
   }
 
-  async logoutForm() {
-    await this.logout({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-    if (!this.user)
-      this.$router.push('/');
+  async getAccessWithKey() {
+    this.error = await this.buyService({ serviceId: this.selectedServiceId, serviceAccessKey: this.accessKey, accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
+    if (this.error === '') {      
+      await this.getServicesAccess({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
+      this.$router.push({name: 'home'});
+    }
   }
 }
 </script>
@@ -155,5 +192,15 @@ export default class Profile extends Vue {
     margin-top: 20px;
     color: white;
     background-color: #db3e3e;
+  }
+
+  .formMargin {
+    font-family: Questrial, sans-serif;
+    margin: 40px;
+  }
+
+  .errorField {
+    margin-top: 10px;
+    color: #db3e3e;
   }
 </style>

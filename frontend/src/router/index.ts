@@ -20,6 +20,21 @@ const routes: Array<RouteConfig> = [
     name: 'profile',
     component: () => import('../views/Profile.vue')
   },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/Register.vue')
+  },
+  {
+    path: '/services',
+    name: 'services',
+    component: () => import('../views/Services.vue')
+  },
+  {
+    path: '/monitor',
+    name: 'monitor',
+    component: () => import('../views/Monitor.vue')
+  },
 ]
 
 const router = new VueRouter({

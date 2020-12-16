@@ -28,7 +28,8 @@ export class MonitorRoutes {
     
     this.router.post('/', IsAuth, async (req, res, next) => {
       let user: UserJWT = req['user'];
-      let result = await this.monitorService.CreateMonitor({ user });
+      let { serviceAccessKey } = req.body;
+      let result = await this.monitorService.CreateMonitorAccess({ user, serviceAccessKey });
       if (result.success)
         res.json(result.data);
       else if (result.error)

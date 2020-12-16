@@ -6,7 +6,7 @@
           <div class="card card-signin my-5">
             <div class="card-body">
               <h5 class="card-title text-center">Einloggen</h5>
-              <form class="form-signin" v-if="!user.loggedIn">
+              <form class="form-signin" v-if="!user">
                 <div class="form-label-group">
                   <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
                   <label for="inputUsername">Benutzername</label>
@@ -22,10 +22,12 @@
               <div v-else>
                 <p class="signedIn-text">Bereits eingeloggt. Wollen Sie sich abmelden?</p>
                 <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="logoutForm()">Ausloggen</button>
-              </div>                         
-              <div class="error-fields">
-                <div>{{ errorForm }}</div>
+              </div>
+              <div class="divCenterMargin">
                 <div>{{ error }}</div>
+              </div>
+              <div class="divCenterMargin">
+                Noch keinen Account? <router-link to="/register">Hier</router-link> registrieren.
               </div>
             </div>
           </div>
@@ -42,31 +44,31 @@ import { Action, Getter } from 'vuex-class';
 @Component
 export default class Login extends Vue {
   @Action login;
+  @Action getServicesAccess;
   @Action logout;
   @Getter user;
-  @Getter error;
 
   input = {
     username: '',
     password: ''
   };
-  errorForm = ''
+  error = ''
 
   async loginForm() {
     if (this.input.username != '' && this.input.password != '') {
-      await this.login({username: this.input.username, password: this.input.password});
-      this.errorForm = '';
-      if (this.user.loggedIn)
+      this.error = await this.login({username: this.input.username, password: this.input.password});
+      if (this.user) {
+        await this.getServicesAccess({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
         this.$router.push({name: 'home'});
+      }
     } else if (this.input.username == '')
-      this.errorForm = 'Bitte geben Sie einen Benutzernamen ein.';
+      this.error = 'Bitte geben Sie einen Benutzernamen ein.';
     else
-      this.errorForm = 'Bitte geben Sie ein Password ein.';
+      this.error = 'Bitte geben Sie ein Password ein.';
   }
 
   async logoutForm() {
-    await this.logout();
-    this.errorForm = '';
+    this.error = await this.logout({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
   }
 }
 </script>
@@ -173,7 +175,7 @@ export default class Login extends Vue {
     color: #777;
   }
 
-  .error-fields {
+  .divCenterMargin {
     margin-top: 8px;
     text-align: center;
   }
