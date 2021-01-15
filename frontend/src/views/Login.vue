@@ -3,33 +3,29 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-          <div class="card card-signin my-5">
-            <div class="card-body">
-              <h5 class="card-title text-center">Einloggen</h5>
-              <form class="form-signin" v-if="!user">
-                <div class="form-label-group">
-                  <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
-                  <label for="inputUsername">Benutzername</label>
-                </div>
-
-                <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" v-model="input.password" placeholder="Passwort" required>
-                  <label for="inputPassword">Passwort</label>
-                </div>
-
-                <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="loginForm()">Einloggen</button>
-              </form>   
-              <div v-else>
-                <p class="signedIn-text">Bereits eingeloggt. Wollen Sie sich abmelden?</p>
-                <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="logoutForm()">Ausloggen</button>
-              </div>
-              <div class="divCenterMargin">
-                <div>{{ error }}</div>
-              </div>
-              <div class="divCenterMargin">
-                Noch keinen Account? <router-link to="/register">Hier</router-link> registrieren.
-              </div>
+          <h3>Einloggen</h3>
+          <form class="form-signin" v-if="!user">
+            <div class="form-label-group">
+              <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
+              <label for="inputUsername">Benutzername</label>
             </div>
+
+            <div class="form-label-group">
+              <input type="password" id="inputPassword" class="form-control" v-model="input.password" placeholder="Passwort" required>
+              <label for="inputPassword">Passwort</label>
+            </div>
+
+            <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="loginForm()">Einloggen</button>
+          </form>   
+          <div v-else>
+            <p class="signedIn-text">Bereits eingeloggt. Wollen Sie sich abmelden?</p>
+            <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="logoutForm()">Ausloggen</button>
+          </div>
+          <div class="divCenterMargin">
+            <div class="error">{{ error }}</div>
+          </div>
+          <div class="divCenterMargin">
+            Noch keinen Account? <router-link to="/register">Hier</router-link> registrieren.
           </div>
         </div>
       </div>
@@ -45,7 +41,6 @@ import { Action, Getter } from 'vuex-class';
 export default class Login extends Vue {
   @Action login;
   @Action getServicesAccess;
-  @Action logout;
   @Getter user;
 
   input = {
@@ -53,6 +48,11 @@ export default class Login extends Vue {
     password: ''
   };
   error = ''
+
+  mounted() {
+    if (this.user)
+      this.$router.push({name: 'profile'});
+  }
 
   async loginForm() {
     if (this.input.username != '' && this.input.password != '') {
@@ -66,28 +66,16 @@ export default class Login extends Vue {
     else
       this.error = 'Bitte geben Sie ein Password ein.';
   }
-
-  async logoutForm() {
-    this.error = await this.logout({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-  }
 }
 </script>
 
 <style scoped>
-  .card-signin {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  .home {
+    padding: 50px 0px;
   }
 
-  .card-signin .card-title {
-    margin-bottom: 2rem;
-    font-weight: 300;
-    font-size: 1.5rem;
-  }
-
-  .card-signin .card-body {
-    padding: 2rem;
+  h3 {
+    text-align: center;
   }
 
   .form-signin {
@@ -101,10 +89,6 @@ export default class Login extends Vue {
     font-weight: bold;
     padding: 1rem;
     transition: all 0.2s;
-  }
-
-  h3 {
-    text-align: center;
   }
 
   .inputForm {
@@ -187,6 +171,10 @@ export default class Login extends Vue {
 
   .btnClass {
     color: white;
-    background-color: #db3e3e;
+    background-color: #db3e3e;    
+  }
+
+  .error {
+    color: #db3e3e;    
   }
 </style>

@@ -33,6 +33,20 @@ const getMonitor = async accessToken => {
   return { data, error };
 }
 
+const updateMonitor = async ({ webHook, name, imageUrl, accessToken }) => {
+  let response, data, error;
+  try {
+    response = await axios.patch('http://localhost/api/monitor', {webHook, name, imageUrl}, {headers: {'Authorization': `Bearer ${accessToken}`}});
+    if (response && response.status == 200)
+      data = response.data.monitor;
+    else
+      error = { message: 'Failed response updating Monitor', response };
+  } catch (err) {
+    error = { message: 'Error updateMonitor', err };
+  }
+  return { data, error };
+}
+
 const sendTestmessage = async accessToken => {
   let response, data, error;
   try {
@@ -89,7 +103,7 @@ export default new Vuex.Store({
       }
       catch (err) {
         if (err.response) {
-          if (err.response.data.error.message == 'Username or Password Wrong')
+          if (err.response.data.message == 'Username or Password Wrong')
             error = 'Benutzername und Passwort stimmen nicht überein';
           else {
             console.log(err.response);
@@ -105,24 +119,66 @@ export default new Vuex.Store({
       let user, error, response;
       try {
         response = await axios.post('http://localhost/api/user', {username: username, mail: mail, password: password});
+        console.log(response)
         if (response && response.status == 200) {
           user = {
             name: response.data.user.username,
             id: response.data.user._id,
             mail: response.data.user.mail,
-            loggedIn: true,
             accessToken: response.data.accessToken,
             refreshToken: response.data.refreshToken
           };
-          commit('setUser', {user});
+          commit('setUser', user);
         } else
           console.log(response);
         return '';    
       }
       catch (err) {
         if (err.response) {
-          console.log(err.response);
-          error = 'Registrieren fehlgeschlagen';
+          if (err.response.data.message == 'Username already in use')
+            error = 'Benutzername wird schon verwendet';
+          else if (err.response.data.message == 'Mail already in use')
+            error = 'E-Mail Adresse wird schon verwendet';
+          else {
+            console.log(err.response);
+            error = 'Registrieren fehlgeschlagen';
+          }
+        } else {
+          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
+        }
+        return error;
+      };
+    },
+    async updateUser({ commit }, { username, mail, password, oldPassword, accessToken, refreshToken }) {
+      let user, error, response;
+      try {
+        response = await axios.patch('http://localhost/api/user', {username, mail, password, oldPassword}, {headers: {'Authorization': `Bearer ${accessToken}`}});
+        console.log(response)
+        if (response && response.status == 200) {
+          user = {
+            name: response.data.user.username,
+            id: response.data.user._id,
+            mail: response.data.user.mail,
+            accessToken: accessToken,
+            refreshToken: refreshToken
+          };
+          commit('setUser', user);
+        } else
+          console.log(response);
+        return '';    
+      }
+      catch (err) {
+        if (err.response) {
+          if (err.response.data.message == '\'oldPassword\' wrong')
+            error = 'Altes Passwort ist falsch.';
+          else if (err.response.data.message == 'Username already in use')
+            error = 'Benutzername wird schon verwendet';
+          else if (err.response.data.message == 'Mail already in use')
+            error = 'E-Mail Adresse wird schon verwendet';
+          else {
+            console.log(err.response);
+            error = 'Update fehlgeschlagen';
+          }
         } else {
           error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
         }
@@ -242,7 +298,7 @@ export default new Vuex.Store({
               return 'Fehler';
             }
           } else if (responseRefresh.error) {
-            console.log(response.error);
+            console.log(responseRefresh.error);
             return 'Fehler';
           } else {
             console.log('Unbekannter Fehler in getMonitor-Refresh');
@@ -254,6 +310,42 @@ export default new Vuex.Store({
         }
       } else {
         console.log('Unbekannter Fehler in getMonitor');
+        return 'Fehler';
+      }
+    },
+    async updateMonitor({ commit }, { webHook, botName, botImage, accessToken, refreshToken }) {
+      let response = await updateMonitor({ webHook, name: botName, imageUrl: botImage, accessToken });
+      if (response.data) {
+        commit('setMonitorObject', response.data);
+        return '';
+      } else if (response.error) {
+        if (response.error.err.response.data.message === 'Token Expired') {
+          let responseRefresh = await refresh(refreshToken);
+          if (responseRefresh.data) {
+            commit('setAccessToken', responseRefresh.data);
+            response = await updateMonitor({ webHook, name: botName, imageUrl: botImage, accessToken });
+            if (response.data) {
+              commit('setMonitorObject', response.data);
+              return '';
+            } else if (response.error) {
+              console.log(response.error);
+            } else {
+              console.log('Unbekannter Fehler in updateMonitor');
+              return 'Fehler';
+            }
+          } else if (responseRefresh.error) {
+            console.log(responseRefresh.error);
+            return 'Fehler';
+          } else {
+            console.log('Unbekannter Fehler in updateMonitor-Refresh');
+            return 'Fehler';
+          }
+        } else {
+          console.log(response.error);
+          return 'Fehler';
+        }
+      } else {
+        console.log('Unbekannter Fehler in updateMonitor');
         return 'Fehler';
       }
     },
@@ -310,15 +402,44 @@ export default new Vuex.Store({
       let response, error;
       try {
         response = await axios.post('http://localhost/api/monitor/items', {price, productId, site}, {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200)
+        if (response && response.status == 200) {
           commit('addMonitoredProduct', response.data.item);
-        else
-          console.log(response);
-        return '';
+          error = '';
+        }
+        else {
+          error = 'Fehler';
+        }
+        return error;
       } catch (err) {
         if (err.response) {
+          if (err.response.data.message == 'Product is already monitored')
+            error = 'Produkt wird schon beobachtet'
+          else {
+            console.log(err.response);
+            error = 'AddMonitoredProducts fehlgeschlagen';
+          }
+        } else {
+          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
+        }
+        return error;
+      }
+    },
+    async deleteMonitoredProduct({ commit }, { productId, site, accessToken, refreshToken }) {
+      let response, error;
+      try {
+        response = await axios.delete(`http://localhost/api/monitor/items/${productId}`, {headers: {'Authorization': `Bearer ${accessToken}`}, data: {site}});
+        if (response && response.status == 200) {
+          commit('removeMonitoredProduct', productId);
+          error = '';
+        }
+        else {
+          error = 'Fehler';
+        }
+        return error;
+      } catch (err) {
+        if (err.response) {          
           console.log(err.response);
-          error = 'AddMonitoredProducts fehlgeschlagen';
+          error = 'DeleteMonitoredProduct fehlgeschlagen';
         } else {
           error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
         }
@@ -353,6 +474,10 @@ export default new Vuex.Store({
         ...state.monitor.monitoredProducts,
         product
       ];
+    },
+    removeMonitoredProduct: (state: any, id) => {
+      const i = state.monitor.monitoredProducts.map(item => item._id).indexOf(id);
+      state.monitor.monitoredProducts.splice(i, 1);
     },
     setAvailableProducts: (state: any, availableProducts) => {
       state.monitor.availableProducts = availableProducts;

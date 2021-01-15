@@ -70,6 +70,12 @@ export class UserService {
       if (user.password != sha3_512(oldPassword + user.salt + config.pepper)) 
         return {success: false, error: {status: 401, message: '\'oldPassword\' wrong'}};
 
+      if (!await UserModel.IsUsernameUnused({ username }))
+        return {success: false, error: {status: 400, message: 'Username already in use'}};
+
+      if (!await UserModel.IsMailUnused({ mail }))
+        return {success: false, error: {status: 400, message: 'Mail already in use'}};
+
       if (username) {
         await UserModel.UpdateUsername({_id, username});
         await UserModel.SetInvalidSession({_id});
@@ -81,6 +87,7 @@ export class UserService {
       }       
 
       if (password) {
+        password = sha3_512(password + user.salt + config.pepper);
         await UserModel.UpdatePassword({_id, password});
         await UserModel.SetInvalidSession({_id});
       }       
@@ -106,56 +113,6 @@ export class UserService {
           return {success: false, error: {status: 404, message: 'Can\'t find user'}};
       } else
         return {success: false, error: {status: 404, message: 'ID Missing'}};
-    } catch (error) {
-      return {success: false, error};
-    }    
-  }
-
-  async UpdateUsername({_id, username}: {_id: string, username: string}): Promise<IResult> {
-    try {
-      if (_id && username) {
-        let result = await UserModel.UpdateUsername({_id, username});
-        if (result) {
-          await UserModel.SetInvalidSession({_id});
-          return {success: true, data: {user: GetUser_O(result)}};
-        } else
-          return {success: false, error: {status: 404, message: 'Can\'t find user'}};
-      } else
-        return {success: false, error: {status: 404, message: 'ID or Username Missing'}};
-    } catch (error) {
-      return {success: false, error};
-    }    
-  }
-
-  async UpdateMail({_id, mail}: {_id: string, mail: string}): Promise<IResult> {
-    try {
-      if (_id && mail) {
-        let result = await UserModel.UpdateMail({_id, mail});
-        if (result) {
-          await UserModel.SetInvalidSession({_id});
-          return {success: true, data: {user: GetUser_O(result)}};
-        } else
-          return {success: false, error: {status: 404, message: 'Can\'t find user'}};
-      } else
-        return {success: false, error: {status: 404, message: 'ID or Mail Missing'}};
-    } catch (error) {
-      return {success: false, error};
-    }    
-  }
-
-  async UpdatePassword({_id, password}: {_id: string, password: string}): Promise<IResult> {
-    try {
-      if (_id && password) {
-        let user = await UserModel.FindUser({_id});
-        if (user) {
-          password = sha3_512(password + user.salt + config.pepper);
-          let result = await UserModel.UpdatePassword({_id, password});
-          await UserModel.SetInvalidSession({_id});
-          return {success: true, data: {user: GetUser_O(result)}};
-        } else
-          return {success: false, error: {status: 404, message: 'Can\'t find user'}};
-      } else
-        return {success: false, error: {status: 404, message: 'ID or Password Missing'}};
     } catch (error) {
       return {success: false, error};
     }    

@@ -3,14 +3,42 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" v-if="user">
-          <div class="card card-signin my-5">
-            <div class="card-body">
-              <h5 class="card-title text-center">Profil</h5>
-              <div>Benutzername: {{ user.name }}</div>
-              <div>Mail: {{ user.mail }}</div>
-              <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Ausloggen</button>
+          <h3>Profil</h3>
+          <div class="content" v-if="!editStatus">Benutzername: {{ user.name }}</div>
+          <div class="marginTop content" v-if="!editStatus">Mail: {{ user.mail }}</div>
+          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="edit" v-if="!editStatus">Bearbeiten</button>
+          <form class="form-signin" v-if="editStatus">
+            <div class="form-label-group row">
+              <input type="text" id="inputUsername" class="form-control col-11" v-model="username" v-bind:disabled="!changeUsername" placeholder="Benutzername" required autofocus>
+              <label for="inputUsername">Benutzername</label>
+              <input type="checkbox" class="col-1 checkbox" id="inputChangeUsername" v-model="changeUsername"/>
             </div>
+
+            <div class="form-label-group row">
+              <input type="text" id="inputMail" class="form-control col-11" v-model="mail" v-bind:disabled="!changeMail" placeholder="E-Mail Adresse" required autofocus>
+              <label for="inputMail">E-Mail Adresse</label>
+              <input type="checkbox" class="col-1 checkbox" id="inputChangeMail" v-model="changeMail"/>
+            </div>
+
+            <div class="form-label-group row">
+              <input type="password" id="inputPasswordNew" class="form-control col-11" v-model="passwordNew" v-bind:disabled="!changePassword" placeholder="Neues Passwort" required>
+              <label for="inputPasswordNew">Neues Passwort</label>
+              <input type="checkbox" class="col-1 checkbox" id="inputChangePassword" v-model="changePassword"/>
+            </div>
+
+            <div class="form-label-group row">
+              <input type="password" id="inputPasswordOld" class="form-control" v-model="passwordOld" placeholder="Altes Passwort" required>
+              <label for="inputPasswordOld">Altes Passwort</label>
+            </div>
+
+            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="save">Anwenden</button>
+            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="cancel">Abbrechen</button>
+          </form>                    
+          <div class="divCenterMargin">
+            <div class="error">{{ error }}</div>
           </div>
+          <hr role="separator" aria-orientation="horizontal" class="dropdown-divider marginTop20">
+          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Ausloggen</button>
         </div>
       </div>
     </div>
@@ -24,8 +52,19 @@ import { Action, Getter } from 'vuex-class';
 @Component
 export default class Profile extends Vue {
   @Action logout;
+  @Action updateUser;
   @Getter user;
 
+  editStatus = false;
+  username = '';
+  changeUsername = false;
+  mail = '';
+  changeMail = false;
+  passwordNew = '';
+  changePassword = false;
+  passwordOld = '';
+  error = '';
+  
   mounted() {
     if (!this.user)
       this.$router.push('login');
@@ -36,24 +75,48 @@ export default class Profile extends Vue {
     if (!this.user)
       this.$router.push('/');
   }
+
+  edit() {
+    this.username = '';
+    this.mail = '';
+    this.passwordOld = '';
+    this.passwordNew = '';
+    this.changeUsername = false;
+    this.changeMail = false;
+    this.changePassword = false;
+    this.editStatus = true;
+  }
+
+  async save() {
+    if (this.passwordOld) {
+      let changedUsername = this.changeUsername ? this.username : undefined;
+      let changedMail = this.changeMail ? this.mail : undefined;
+      let changedPassword = this.changePassword ? this.passwordNew : undefined;
+      this.error = await this.updateUser({ username: changedUsername, mail: changedMail, password: changedPassword, oldPassword: this.passwordOld, accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
+      if (this.error == '') {
+        this.editStatus = false;
+      }
+    } else
+      this.error = 'Bitte geben Sie Ihr altes Passwort ein.'
+  }
+
+  cancel() {
+    this.editStatus = false;
+  }
 }
 </script>
 
 <style scoped>
-  .card-signin {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  .home {
+    padding: 50px 0px;
   }
 
-  .card-signin .card-title {
-    margin-bottom: 2rem;
-    font-weight: 300;
-    font-size: 1.5rem;
+  h3 {
+    text-align: center;
   }
 
-  .card-signin .card-body {
-    padding: 2rem;
+  .content {
+    font-size: 1.3em;
   }
 
   .form-signin {
@@ -69,19 +132,19 @@ export default class Profile extends Vue {
     transition: all 0.2s;
   }
 
-  h3 {
-    text-align: center;
-  }
-
   .inputForm {
     margin: auto;
     width: 100px;
     border: 2px solid rgb(44, 44, 44);
   }
 
+  .checkbox {
+    margin: auto 0;
+  }
+
   .form-label-group {
     position: relative;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 0;
   }
 
   .form-label-group input {
@@ -155,5 +218,29 @@ export default class Profile extends Vue {
     margin-top: 20px;
     color: white;
     background-color: #db3e3e;
+    
+    font-size: 80%;
+    border-radius: 5rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
+  }
+
+  .marginTop {
+    margin-top: 10px;
+  }
+
+  .marginTop20 {
+    margin-top: 20px;
+  }
+
+  .divCenterMargin {
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .error {
+    color: #db3e3e;    
   }
 </style>

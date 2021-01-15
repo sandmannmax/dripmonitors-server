@@ -3,34 +3,30 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-          <div class="card card-signin my-5">
-            <div class="card-body">
-              <h5 class="card-title text-center">Registrieren</h5>
-              <form class="form-signin" v-if="!user">
-                <div class="form-label-group">
-                  <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
-                  <label for="inputUsername">Benutzername</label>
-                </div>
-
-                <div class="form-label-group">
-                  <input type="text" id="inputMail" class="form-control" v-model="input.mail" placeholder="E-Mail Adresse" required autofocus>
-                  <label for="inputMail">E-Mail Adresse</label>
-                </div>
-
-                <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" v-model="input.password" placeholder="Passwort" required>
-                  <label for="inputPassword">Passwort</label>
-                </div>
-
-                <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="registerForm()">Registrieren</button>
-              </form>                      
-              <div class="divCenterMargin">
-                <div>{{ error }}</div>
-              </div>
-              <div class="divCenterMargin">
-                Schon einen Account? <router-link to="/login">Hier</router-link> anmelden.
-              </div>
+          <h3>Registrieren</h3>
+          <form class="form-signin" v-if="!user">
+            <div class="form-label-group">
+              <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Benutzername" required autofocus>
+              <label for="inputUsername">Benutzername</label>
             </div>
+
+            <div class="form-label-group">
+              <input type="text" id="inputMail" class="form-control" v-model="input.mail" placeholder="E-Mail Adresse" required autofocus>
+              <label for="inputMail">E-Mail Adresse</label>
+            </div>
+
+            <div class="form-label-group">
+              <input type="password" id="inputPassword" class="form-control" v-model="input.password" placeholder="Passwort" required>
+              <label for="inputPassword">Passwort</label>
+            </div>
+
+            <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="registerForm()">Registrieren</button>
+          </form>                      
+          <div class="divCenterMargin">
+            <div class="error">{{ error }}</div>
+          </div>
+          <div class="divCenterMargin">
+            Schon einen Account? <router-link to="/login">Hier</router-link> anmelden.
           </div>
         </div>
       </div>
@@ -83,20 +79,8 @@ export default class Register extends Vue {
 </script>
 
 <style scoped>
-  .card-signin {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .card-signin .card-title {
-    margin-bottom: 2rem;
-    font-weight: 300;
-    font-size: 1.5rem;
-  }
-
-  .card-signin .card-body {
-    padding: 2rem;
+  .home {
+    padding: 50px 0px;
   }
 
   .form-signin {
@@ -189,13 +173,12 @@ export default class Register extends Vue {
     text-align: center;
   }
 
-  .signedIn-text {
-    font-size: 1.1rem;
-    text-align: center;
-  }
-
   .btnClass {
     color: white;
     background-color: #db3e3e;
+  }
+
+  .error {
+    color: #db3e3e;    
   }
 </style>

@@ -109,6 +109,11 @@ export class MonitorService {
 
       if (imageUrl)
         await MonitorModel.UpdateBotImage({ userId: user._id, botImage: imageUrl });
+
+      result = await MonitorModel.GetMonitor({ userId: user._id });
+      if (result.length != 1)
+        return {success: false, error: {status: 500, message: 'Object is not existing.', internalMessage: `MonitorService.UpdateMonitor: Error after Updating`}};        
+      monitor = result[0];
       
       return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {

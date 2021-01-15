@@ -12,18 +12,21 @@ export class DiscordService {
       if (!botName)
         botName = 'LSB Monitor';
 
-      if (!botImage)
-        botImage = 'https://images.discordapp.net/avatars/525382819808280597/f3e9d922bafff516be910eba12a560e5.png?size=512';
+      let regex = new RegExp('(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})')
+
+      if (!botImage || !regex.test(botImage))
+        botImage = 'http://lazyshoebot.com/logoFull.png';
 
       let strings = webHook.split('/');
       let id = strings[strings.length-2];
       let token = strings[strings.length-1];
       this.webhookClient = new WebhookClient(id, token);
+
       this.webhookClient.send('Hello there!', {
         username: botName,
         avatarURL: botImage
       });
-      return {success: true, data: {message: 'Send Message successfully'}};   
+      return {success: true, data: {message: 'Send Message successfully'}};  
     } catch (error) {
       return {success: false, error};
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="container">
-      <h1 class="text-center header">
+      <h1 class="text-center">
         <img src="logoFull.png" width="500"/>
       </h1>
       <div class="text-center margin">
@@ -21,10 +21,6 @@ export default class Home extends Vue {
 </script>
 
 <style scoped>
-  .header {
-    margin-top: 10px;
-  }
-
   .margin {
     margin-top: 50px;
   }

@@ -14,17 +14,21 @@ export class DiscordService {
         botName = 'LSB Monitor';
 
       if (!botImage)
-        botImage = 'https://images.discordapp.net/avatars/525382819808280597/f3e9d922bafff516be910eba12a560e5.png?size=512';
+        botImage = 'http://lazyshoebot.com/logo.png';
 
       let strings = webHook.split('/');
       let id = strings[strings.length-2];
       let token = strings[strings.length-1];
       this.webhookClient = new WebhookClient(id, token);
+      let colors = ['#0099ff', '#aaee99', '#aaee77', '#d0d000'];
+      let index = Math.floor(Math.random() * colors.length);
       let message: MessageEmbed = new MessageEmbed()
-        .setColor('#0099ff')
+        .setColor(colors[index])
         .setTitle(shoeName)
         .setURL(href)
-        .setDescription(`Ist wieder für ${price}€ erhältlich.`);
+        .setDescription(`**Preis:** ${price}€\n**Erhältlich:** \u2705`)
+        .setTimestamp()
+        .setFooter('Powered by LazyShoeBot', 'http://lazyshoebot.com/logo.png');
       this.webhookClient.send({
         embeds: [message],
         username: botName,

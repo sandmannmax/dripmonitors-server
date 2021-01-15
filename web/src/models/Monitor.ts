@@ -90,6 +90,7 @@ export namespace MonitorModel {
     product._id = productId;
     product.name = productItem.name;
     product.site = site;
+    product.active = productItem.active == 'true';
     product.url = productItem.href;
     product.soldOut = productItem.soldOut == 'true';
     monitoredProduct.product = product;
