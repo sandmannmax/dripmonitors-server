@@ -22,7 +22,7 @@ services:
       - db
       - redis
     volumes:
-      - ./web/src:/usr/src/app/src
+      - ./api/src:/usr/src/app/src
     env_file: 
       - .env
   frontend:

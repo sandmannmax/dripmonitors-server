@@ -4,7 +4,7 @@
       <h5>{{ product.product.site }}: {{ product.product.name }}</h5>
       <div>
         <div>Preislimit: {{ product.price }}€</div>
-        <div><span class="bad" v-if="product.product.soldOut">Ausverkauft</span><span class="bad" v-if="!product.product.active">Nicht erhältlich im Shop</span><span class="good" v-if="product.product.active">Erhältlich im Shop</span></div>
+        <div><span class="bad" v-if="product.product.soldOut && product.product.active">Ausverkauft</span><span class="bad" v-if="!product.product.active">Nicht erhältlich im Shop</span><span class="good" v-if="product.product.active">Erhältlich im Shop</span></div>
       </div>
     </div>
     <div class="col-2 trash-div">

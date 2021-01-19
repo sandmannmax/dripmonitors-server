@@ -9,15 +9,15 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
-import { Getter, Action } from 'vuex-class';
 import ControlBar from './components/ControlBar'
 import Footer from './components/Footer'
 
-@Component({
-  components: { ControlBar, Footer }
-})
-export default class App extends Vue { }
+export default {
+  components: {
+    ControlBar,
+    Footer
+  },
+}
 </script>
 
 <style>
@@ -36,7 +36,7 @@ export default class App extends Vue { }
   }
 
   .content-wrapper {
-    min-height: calc(100vh - 180px);
+    min-height: calc(100vh - 160px);
     margin-top: 10px;
     margin-bottom: 4px;
   }

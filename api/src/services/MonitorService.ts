@@ -8,6 +8,8 @@ import { UserJWT } from '../types/User';
 import JWT from 'jsonwebtoken';
 import { ServiceAccessModel } from '../models/ServiceAccess';
 import config from '../config';
+import { BetaRequest } from '../types/BetaRequest';
+import { BetaRequestModel } from '../models/BetaRequest';
 
 @Service()
 export class MonitorService {
@@ -15,6 +17,23 @@ export class MonitorService {
 
   constructor() {
     this.discordService = Container.get(DiscordService);
+  }
+
+  async RequestBetaAccess({ email }: { email: string }): Promise<IResult> {
+    try {
+      if (!email)
+        return {success: false, error: {status: 404, message: 'E-Mail missing', internalMessage: `MonitorService.RequestBetaAccess: email empty`}}; 
+
+      let result = await BetaRequestModel.GetBetaRequest({ email });
+      if (result.length != 0)
+        return {success: false, error: {status: 404, message: 'E-Mail already requested Beta-Testing-Access'}};
+
+      await BetaRequestModel.CreateBetaRequest({ email });
+      
+      return {success: true, data: { message: 'Request sent successfully' }};
+    } catch (error) {
+      return {success: false, error};
+    }
   }
 
   async GetMonitor({ user }: { user: UserJWT }): Promise<IResult> {
@@ -31,6 +50,10 @@ export class MonitorService {
         return {success: false, error: {status: 404, message: 'Object is not existing.'}};
       } else if (result.length == 1) {
         monitor = result[0];
+        if (!monitor.botImage)
+          monitor.botImage = 'http://lazyshoebot.com/logo.png'
+        if (!monitor.botName)
+          monitor.botName = 'LSB Monitor'
       } else {
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: Found more than one monitor for userId = ${user._id}`}};
       }
@@ -104,10 +127,10 @@ export class MonitorService {
       if (webHook)
         monitor = await MonitorModel.UpdateWebhook({ userId: user._id, webHook });
 
-      if (name)
+      if (name != undefined)
         await MonitorModel.UpdateBotName({ userId: user._id, botName: name });
 
-      if (imageUrl)
+      if (imageUrl != undefined)
         await MonitorModel.UpdateBotImage({ userId: user._id, botImage: imageUrl });
 
       result = await MonitorModel.GetMonitor({ userId: user._id });

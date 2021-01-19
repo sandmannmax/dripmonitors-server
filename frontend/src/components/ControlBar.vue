@@ -1,33 +1,26 @@
 <template>
-  <b-navbar type="dark" id="navbar" toggleable="sm">
-    <b-container>
-      <b-navbar-nav>
-        <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
-      </b-navbar-nav>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
+  <div>
+    <b-navbar type="dark" id="navbar">
+      <b-container>
         <b-navbar-nav>
-          <router-link class="link" to="/monitor" v-if="user && hasMonitor">Monitor</router-link>
+          <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <router-link class="link" to="/profile" v-if="user">Hallo, {{ user.name }}</router-link>
-          <router-link class="link" to="/login" v-else>Einloggen</router-link>
-          <router-link class="link" to="/register" v-if="!user">Registrieren</router-link>
+          <!-- <a class="link" href="https://app.lazyshoebot.com">Monitor</a> -->
+          <router-link class="link no-underline" to="/monitor">
+            <div class="cta">Get Beta Access</div>
+          </router-link>          
         </b-navbar-nav>
-      </b-collapse>
-    </b-container>
-  </b-navbar>
+      </b-container>
+    </b-navbar>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
 
 @Component
-export default class ControlBar extends Vue {
-  @Getter user;
-  @Getter hasMonitor;
-}
+export default class ControlBar extends Vue { }
 </script>
 
 <style scoped>
@@ -37,20 +30,41 @@ export default class ControlBar extends Vue {
   margin: auto 10px;
 }
 
-.btnCall {
+.no-underline {
+  text-decoration: none;
+}
+
+.cta {
+  padding: 10px;
+  margin-left: 10px;
+  border: 3px #db3e3e solid;
+  transition: 250ms;
+}
+
+.cta:hover {
   color: white;
   background-color: #db3e3e;
+  text-decoration: none;
+  transition: 250ms;
 }
 
 #navbar {
   background-color: rgb(22, 21, 21);
 }
 
-#title {
-  font-size: 2em;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  color: #db3e3e;
+.languagecontainer {
+  height: 24px;
+  background-color: rgb(54, 54, 54);
+}
+
+.language {
+  color: white;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.language:hover {
+  text-decoration: underline;
 }
 
 </style>

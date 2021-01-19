@@ -102,6 +102,7 @@ export default class Profile extends Vue {
 
   cancel() {
     this.editStatus = false;
+    this.error = '';
   }
 }
 </script>

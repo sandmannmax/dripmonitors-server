@@ -14,7 +14,7 @@ export class DiscordService {
         botName = 'LSB Monitor';
 
       if (!botImage)
-        botImage = 'http://lazyshoebot.com/logo.png';
+        botImage = 'http://lazyshoebot.com/logoWide.png';
 
       let strings = webHook.split('/');
       let id = strings[strings.length-2];
@@ -28,7 +28,7 @@ export class DiscordService {
         .setURL(href)
         .setDescription(`**Preis:** ${price}€\n**Erhältlich:** \u2705`)
         .setTimestamp()
-        .setFooter('Powered by LazyShoeBot', 'http://lazyshoebot.com/logo.png');
+        .setFooter('Powered by LazyShoeBot', 'http://lazyshoebot.com/logoWide.png');
       this.webhookClient.send({
         embeds: [message],
         username: botName,

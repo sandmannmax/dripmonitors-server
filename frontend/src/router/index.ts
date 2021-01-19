@@ -11,29 +11,19 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('../views/Login.vue')
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: () => import('../views/Profile.vue')
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import('../views/Register.vue')
-  },
-  {
-    path: '/services',
-    name: 'services',
-    component: () => import('../views/Services.vue')
-  },
-  {
     path: '/monitor',
     name: 'monitor',
     component: () => import('../views/Monitor.vue')
+  },
+  {
+    path: '/terms',
+    name: 'terms',
+    component: () => import('../views/Terms.vue')
+  },
+  {
+    path: '/privacy',
+    name: 'privacy',
+    component: () => import('../views/Privacy.vue')
   },
 ]
 

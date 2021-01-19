@@ -8,14 +8,14 @@ export class DiscordService {
   private webhookClient: WebhookClient;
 
   async SendTestMessage({webHook, botName, botImage}: {webHook: string, botName: string, botImage: string}): Promise<IResult> {
-    try {
+    try {      
       if (!botName)
         botName = 'LSB Monitor';
 
       let regex = new RegExp('(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})')
 
       if (!botImage || !regex.test(botImage))
-        botImage = 'http://lazyshoebot.com/logoFull.png';
+        botImage = 'http://www.lazyshoebot.com/logoWide.png';
 
       let strings = webHook.split('/');
       let id = strings[strings.length-2];

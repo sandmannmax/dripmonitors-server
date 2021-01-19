@@ -1,213 +1,52 @@
 <template>
   <div class="container">
-    <div class="monitor">
-      <div id="monitorConfiguration">
-        <div>
-          <b-img v-bind:src="monitor.monitor.botImage" rounded="circle" id="botImage"/>
-          <h3>{{ monitor.monitor.botName }}</h3> 
-          <p>
-            <button class="btn btn-sm button" v-on:click="editMonitor()">Bearbeiten</button>
-            <button class="btn btn-sm button" v-on:click="sendTestMessage()">Testnachricht senden</button>
-          </p>          
+    <h3 class="text-center">Request Free Beta-Testing Access</h3>
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" v-if="!betaRequestSent">
+      <form class="form-signin">
+        <div class="form-label-group">
+          <input type="email" id="inputEmail" class="form-control" v-model="email" placeholder="E-Mail" required autofocus>
+          <label for="inputEmail">E-Mail</label>
         </div>
-        
-        <b-modal id="editMonitor" hide-header hide-footer centered>
-          <form @submit.stop.prevent="" class="formMargin">
-            <div class="form-label-group">
-              <input type="text" id="inputWebhook" class="form-control" v-model="webHook" placeholder="Discord Webhook" required>
-              <label for="inputWebhook">Discord Webhook</label>
-            </div>
-            <div class="form-label-group">
-              <input type="text" id="inputBotname" class="form-control" v-model="botName" placeholder="Bot Name" required>
-              <label for="inputBotname">Bot Name</label>
-            </div>
-            <div class="form-label-group">
-              <input type="text" id="inputBotimage" class="form-control" v-model="botImage" placeholder="Bot Profilbild" required>
-              <label for="inputBotimage">Bot Profilbild</label>
-            </div>
-            <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="saveEditMonitor">Speichern</button> 
-            <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="cancelEditMonitor">Abbrechen</button> 
-          </form>
-          <div class="error">{{ editMonitorError }}</div>
-        </b-modal>        
-      </div>
-      <div id="monitoredItems">
-        <div class="monitoredItemsHeader">
-          <h3>Beobachtete Produkte</h3>
-          <button class="buttonAdd" v-on:click="add()">
-            <svg width="1.6em" height="1.6em" viewBox="3 1 16 16" class="bi bi-plus" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-            </svg>
-          </button> 
-        </div>      
-        <div v-for="product in monitor.monitoredProducts" v-bind:key="product.id">
-          <Product v-bind:product="product"/>
-        </div>
-        <b-modal id="addMonitoredItem" hide-header hide-footer centered>
-          <form @submit.stop.prevent="addMonitoredItem" class="formMargin">
-            <Dropdown v-bind:selectedItem.sync="selectedItem"/> 
-            <div class="row">
-              <div class="col-2">Name: </div>
-              <div class="col-10">{{ selectedItem.name }}</div>
-            </div>   
-            <div class="row">
-              <div class="col-2">Site: </div>
-              <div class="col-10">{{ selectedItem.site }}</div>
-            </div> 
-            <div class="row">
-              <div class="col-2">Preis: </div>
-              <div class="col-10">
-                <input type="number" v-model="price"/>
-              </div>
-            </div>
-            <button class="btn btn-sm btnClass btn-block text-uppercase" v-bind:disabled="price == 0 || selectedItem.name == undefined">Hinzufügen</button> 
-          </form>
-          <div class="error">{{ addProductError }}</div>
-        </b-modal>
+
+        <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="submit()">Request Access</button>
+      </form>
+      <div class="divCenterMargin">
+        <div class="error">{{ error }}</div>
       </div>
     </div>
+    <div class="divCenterMargin" v-else>Thank you for your request! We will contact you soon</div>
   </div>  
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
-import Dropdown from '../components/Dropdown.vue';
-import Product from '../components/Product.vue';
 
-@Component({
-  components: {
-    Dropdown,
-    Product,
-  }
-})
+@Component
 export default class Monitor extends Vue {
-  @Action getMonitor;
-  @Action getMonitoredProducts;
-  @Action getAvailableProducts;  
-  @Action sendTestmessage;
-  @Action addMonitoredProduct;
-  @Action updateMonitor;
-  @Getter user;
-  @Getter hasMonitor;
-  @Getter monitor;
+  @Action requestBetaAccess;
+  @Getter betaRequestSent;
 
-  selectedItem: any = {};
-  price = 0;
+  email: string = '';
+  error: string = '';
 
-  webHook = '';
-  botName = '';
-  botImage = '';
-
-  editMonitorError = '';
-  addProductError = '';
-
-  async mounted() {
-    if (!this.user || !this.hasMonitor)
-      this.$router.push('/');
-    else {
-      await this.getMonitor({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-      await this.getMonitoredProducts({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-      await this.getAvailableProducts({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-    }
-  }
-
-  sendTestMessage() {
-    this.sendTestmessage({ accessToken: this.user.accessToken, refreshToken: this.user.refreshToken });
-  }
-
-  editMonitor() {
-    this.webHook = this.monitor.monitor.webHook;
-    this.botName = this.monitor.monitor.botName;
-    this.botImage = this.monitor.monitor.botImage;
-    this.$bvModal.show('editMonitor');
-  }
-
-  async saveEditMonitor() {
-    this.editMonitorError = await this.updateMonitor({ webHook: this.webHook, botName: this.botName, botImage: this.botImage, accessToken: this.user.accessToken, refreshToken: this.user.refreshToken })
-    if (this.editMonitorError == '')
-      this.$bvModal.hide('editMonitor');
-  }
-
-  cancelEditMonitor() {
-    this.$bvModal.hide('editMonitor');
-  }
-
-  add() {
-    this.selectedItem = {};
-    this.price = 0;
-    this.$bvModal.show('addMonitoredItem');
-  }
-
-  async addMonitoredItem() {
-    this.addProductError = await this.addMonitoredProduct({site: this.selectedItem.site, price: this.price, productId: this.selectedItem._id, accessToken: this.user.accessToken, refreshToken: this.user.refreshToken});
-    if (this.addProductError == '')
-      this.$bvModal.hide('addMonitoredItem');
-    else if (this.addProductError == 'Produkt wird schon beobachtet') {      
-      this.selectedItem = {};
-      this.price = 0;
-    }
+  async submit() {
+    this.error = '';
+    if (this.email && /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(this.email))
+      this.error = await this.requestBetaAccess({ email: this.email });
+    else
+      this.error = 'Please provide a valid email';
   }
 }
 </script>
 
 <style scoped>  
-  .monitor {
-    padding: 40px;
+  .home {
+    padding: 50px 0px;
   }
 
-  #monitorConfiguration {
-    margin-bottom: 50px;
-  }
-
-  #monitorConfiguration h3 {
-    display: inline;
-    margin: auto 0;
-  }
-
-  #monitorConfiguration p {
-    margin-top: 15px;
-  }
-
-  #monitorConfiguration p button {
-    margin-right: 10px;
-  }
-
-  .button {
-    color: white;
-    background-color: #db3e3e;
-  }
-
-  .monitoredItemsHeader {
-    display: flex;
-    align-items: center;
-    height: 3em;
-  }
-
-  .monitoredItemsHeader h3 {
-    margin-top: auto;
-    margin-bottom: auto;
-  } 
-
-  .buttonAdd {
-    background-color: #db3e3e;
-    border: none;
-    width: 1.6em;
-    height: 1.6em;
-    border-radius: 50%;
-    transition: .2s;
-    margin-left: .5em;
-  }
-
-  #botImage {
-    width: 60px;
-    margin-right: 10px;
-  }
-
-  .btnClass {
-    margin-top: 20px;
-    color: white;
-    background-color: #db3e3e;
+  h3 {
+    text-align: center;
   }
 
   .form-signin {
@@ -291,10 +130,24 @@ export default class Monitor extends Vue {
     color: #777;
   }
 
+  .divCenterMargin {
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .signedIn-text {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .btnClass {
+    color: white;
+    background-color: #db3e3e;    
+  }
+
   .error {
     margin-top: 5px;
     text-align: center;
     color: #db3e3e;
   }
-
 </style>
