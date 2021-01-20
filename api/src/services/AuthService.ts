@@ -37,7 +37,7 @@ export class AuthService {
       await RefreshTokenModel.Insert({_id: refreshToken, userId: user._id});
       return {success: true, data: {user: GetUser_O(user), accessToken, refreshToken}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 
@@ -49,7 +49,7 @@ export class AuthService {
       await UserModel.SetInvalidSession({_id});
       return {success: true, data: {message: 'Logged out successfully'}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 
@@ -81,7 +81,7 @@ export class AuthService {
 
       return {success: true, data: { accessToken }};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 

@@ -17,10 +17,8 @@ services:
     image: lsb-api
     depends_on:
       - db
-      - redis
     links:
       - db
-      - redis
     volumes:
       - ./api/src:/usr/src/app/src
     env_file: 
@@ -29,16 +27,16 @@ services:
    image: lsb-frontend
    volumes:
      - ./frontend/src:/app/src
-  monitor:
-    image: lsb-monitor
-    depends_on:
-      - redis
-    links:
-      - redis
-    volumes:
-      - ./services/monitor/src:/usr/src/app/src
-    env_file: 
-      - .env
+  # monitor:
+  #   image: lsb-monitor
+  #   depends_on:
+  #     - redis
+  #   links:
+  #     - redis
+  #   volumes:
+  #     - ./services/monitor/src:/usr/src/app/src
+  #   env_file: 
+  #     - .env
   db:
     image: mongo
     volumes:

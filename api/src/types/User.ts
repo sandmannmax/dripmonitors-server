@@ -1,5 +1,4 @@
 export class User_O {
-  public _id: string;
   public username: string;
   public mail: string;
 }
@@ -21,7 +20,6 @@ export class UserJWT {
 
 export function GetUser_O(user: User): User_O {
   let userO: User_O = new User_O();
-    userO._id = user._id;
     userO.username = user.username;
     userO.mail = user.mail;
     return userO;

@@ -38,7 +38,7 @@ export class MonitorService {
       }
       return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }
   }
 
@@ -73,7 +73,7 @@ export class MonitorService {
       
       return {success: true, data: {monitor: GetMonitor_O(monitor)}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }
   }
 
@@ -97,7 +97,7 @@ export class MonitorService {
         
       return this.discordService.SendTestMessage({webHook: monitor.webHook, botName: monitor.botName, botImage: monitor.botImage});
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }
   }
 
@@ -118,7 +118,7 @@ export class MonitorService {
       
       return {success: true, data: { message: 'Request sent successfully' }};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }
   }
 }

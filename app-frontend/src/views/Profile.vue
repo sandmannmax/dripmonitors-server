@@ -1,55 +1,61 @@
 <template>
-  <div class="home">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" v-if="user">
-          <h3>Profil</h3>
-          <div class="content" v-if="!editStatus">Benutzername: {{ user.name }}</div>
+  <div class="view">
+    <ControlBar/>
+    <div class="main-content">
+      <div class="container">
+        <div class="col-sm-11 col-md-9 col-lg-7 mx-auto" v-if="user">
+          <h3 class="text-center">Profile</h3>
+          <div class="content" v-if="!editStatus">Username: {{ user.name }}</div>
           <div class="marginTop content" v-if="!editStatus">Mail: {{ user.mail }}</div>
-          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="edit" v-if="!editStatus">Bearbeiten</button>
+          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="edit" v-if="!editStatus">Edit</button>
           <form class="form-signin" v-if="editStatus">
             <div class="form-label-group row">
-              <input type="text" id="inputUsername" class="form-control col-11" v-model="username" v-bind:disabled="!changeUsername" placeholder="Benutzername" required autofocus>
-              <label for="inputUsername">Benutzername</label>
+              <input type="text" id="inputUsername" class="form-control col-11" v-model="username" v-bind:disabled="!changeUsername" placeholder="Username" required autofocus>
+              <label for="inputUsername">Username</label>
               <input type="checkbox" class="col-1 checkbox" id="inputChangeUsername" v-model="changeUsername"/>
             </div>
 
             <div class="form-label-group row">
-              <input type="text" id="inputMail" class="form-control col-11" v-model="mail" v-bind:disabled="!changeMail" placeholder="E-Mail Adresse" required autofocus>
-              <label for="inputMail">E-Mail Adresse</label>
+              <input type="text" id="inputMail" class="form-control col-11" v-model="mail" v-bind:disabled="!changeMail" placeholder="E-Mail" required autofocus>
+              <label for="inputMail">E-Mail</label>
               <input type="checkbox" class="col-1 checkbox" id="inputChangeMail" v-model="changeMail"/>
             </div>
 
             <div class="form-label-group row">
-              <input type="password" id="inputPasswordNew" class="form-control col-11" v-model="passwordNew" v-bind:disabled="!changePassword" placeholder="Neues Passwort" required>
-              <label for="inputPasswordNew">Neues Passwort</label>
+              <input type="password" id="inputPasswordNew" class="form-control col-11" v-model="passwordNew" v-bind:disabled="!changePassword" placeholder="New Password" required>
+              <label for="inputPasswordNew">New Password</label>
               <input type="checkbox" class="col-1 checkbox" id="inputChangePassword" v-model="changePassword"/>
             </div>
 
             <div class="form-label-group row">
-              <input type="password" id="inputPasswordOld" class="form-control" v-model="passwordOld" placeholder="Altes Passwort" required>
-              <label for="inputPasswordOld">Altes Passwort</label>
+              <input type="password" id="inputPasswordOld" class="form-control" v-model="passwordOld" placeholder="Old Password" required>
+              <label for="inputPasswordOld">Old Password</label>
             </div>
 
-            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="save">Anwenden</button>
-            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="cancel">Abbrechen</button>
+            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="save">Save</button>
+            <button class="btn btn-sm btnClass btn-block text-uppercase" type="button" v-on:click="cancel">Cancel</button>
           </form>                    
           <div class="divCenterMargin">
             <div class="error">{{ error }}</div>
           </div>
           <hr role="separator" aria-orientation="horizontal" class="dropdown-divider marginTop20">
-          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Ausloggen</button>
+          <button class="btn btn-sm btnClass btn-block text-uppercase" v-on:click="logoutForm">Logout</button>
         </div>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
+import ControlBar from '../components/ControlBar.vue';
+import Footer from '../components/Footer.vue';
 
-@Component
+@Component({
+  components: { ControlBar, Footer }
+})
 export default class Profile extends Vue {
   @Action logout;
   @Action updateUser;
@@ -67,7 +73,7 @@ export default class Profile extends Vue {
   
   mounted() {
     if (!this.user)
-      this.$router.push('login');
+      this.$router.push({ name: 'login' });
   }
 
   async logoutForm() {
@@ -97,7 +103,7 @@ export default class Profile extends Vue {
         this.editStatus = false;
       }
     } else
-      this.error = 'Bitte geben Sie Ihr altes Passwort ein.'
+      this.error = 'Please provide your old password'
   }
 
   cancel() {
@@ -108,16 +114,16 @@ export default class Profile extends Vue {
 </script>
 
 <style scoped>
-  .home {
-    padding: 50px 0px;
-  }
-
-  h3 {
-    text-align: center;
+  .main-content {
+    min-height: calc(100vh - 166px);
+    padding-top: 10px;
+    padding-bottom: 4px;
+    color: rgb(22, 21, 21); 
+    background-color: #dfdfdf;
   }
 
   .content {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 
   .form-signin {
@@ -129,7 +135,7 @@ export default class Profile extends Vue {
     border-radius: 5rem;
     letter-spacing: .1rem;
     font-weight: bold;
-    padding: 1rem;
+    padding: 0.5rem;
     transition: all 0.2s;
   }
 
@@ -218,13 +224,12 @@ export default class Profile extends Vue {
   .btnClass {
     margin-top: 20px;
     color: white;
-    background-color: #db3e3e;
-    
+    background-color: #db3e3e;    
     font-size: 80%;
     border-radius: 5rem;
     letter-spacing: .1rem;
     font-weight: bold;
-    padding: 1rem;
+    padding: 0.5rem;
     transition: all 0.2s;
   }
 

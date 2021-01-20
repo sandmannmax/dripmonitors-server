@@ -26,16 +26,6 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/Profile.vue')
   },
   {
-    path: '/services',
-    name: 'services',
-    component: () => import('../views/Services.vue')
-  },
-  {
-    path: '/monitor',
-    name: 'monitor',
-    component: () => import('../views/Monitor.vue')
-  },
-  {
     path: '/privacy',
     name: 'privacy',
     component: () => import('../views/Privacy.vue')

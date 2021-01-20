@@ -4,15 +4,10 @@
       <b-navbar-nav>
         <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
       </b-navbar-nav>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <router-link class="link" to="/monitor" v-if="user && hasMonitor">Monitor</router-link>
-        </b-navbar-nav>
+      <b-navbar-toggle target="nav-collapse" v-if="user"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav v-if="user">
         <b-navbar-nav class="ml-auto">
-          <router-link class="link" to="/profile" v-if="user">Hallo, {{ user.name }}</router-link>
-          <router-link class="link" to="/login" v-else>Einloggen</router-link>
-          <router-link class="link" to="/register" v-if="!user">Registrieren</router-link>
+          <router-link class="link" to="/profile">Hello, {{ user.name }}</router-link>
         </b-navbar-nav>
       </b-collapse>
     </b-container>

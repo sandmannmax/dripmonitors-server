@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <b-navbar type="dark" id="navbar">
-      <b-container>
-        <b-navbar-nav>
-          <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
-        </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
-          <!-- <a class="link" href="https://app.lazyshoebot.com">Monitor</a> -->
-          <router-link class="link no-underline" to="/monitor">
-            <div class="cta">Get Beta Access</div>
-          </router-link>          
-        </b-navbar-nav>
-      </b-container>
-    </b-navbar>
-  </div>
+  <b-navbar type="dark" id="navbar">
+    <b-container>
+      <b-navbar-nav>
+        <router-link to="/" class="navbar-brand title" id="title"><img src="logo.png" width="60"/></router-link>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <a class="link" href="https://app.lazyshoebot.com">Monitor</a>
+        <router-link class="link no-underline" to="/monitor">
+          <div class="cta">Get Beta Access</div>
+        </router-link>          
+      </b-navbar-nav>
+    </b-container>
+  </b-navbar>
 </template>
 
 <script lang="ts">

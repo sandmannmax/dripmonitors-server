@@ -1,6 +1,6 @@
 <template>
   <div class="view">
-    <div class="container">
+    <div class="container center-box">
       <div class="col-sm-11 col-md-9 col-lg-7 mx-auto" v-if="!user">
         <div class="image-container">
           <img src="logo.png" alt="lazyshoebot logo" id="logo"/>
@@ -26,14 +26,18 @@
         </div>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
+import Footer from '../components/Footer.vue';
 
-@Component
+@Component({
+  components: { Footer }
+})
 export default class Login extends Vue {
   @Action login;
   @Getter user;
@@ -65,11 +69,14 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
-  .view {
-    display: flex;
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;
+  @media (min-device-height: 651px) {
+    .center-box {
+      padding-top: 80px;
+      display: flex;
+      height: calc(100vh - 80px);
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 
   .image-container {

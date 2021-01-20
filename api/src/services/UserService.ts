@@ -24,7 +24,7 @@ export class UserService {
       } else
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: _id empty.`}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 
@@ -54,11 +54,12 @@ export class UserService {
       if (password.length < 10)
         return {success: false, error: {status: 404, message: '\'password\' must contain at least 10 letters'}};
 
-      let activationCodeObject: ActivationCode = ActivationCodeModel.GetActivationCode({ activationCode })[0];
+      let activationCodeObject: ActivationCode = (await ActivationCodeModel.FindActivationCode({ activationCode }))[0];
       let newSalt = await async({length: 20});
       password = sha3_512(password + newSalt + config.pepper);
       let result = await UserModel.CreateUser({ username, mail, password, salt: newSalt, activationCodeId: activationCodeObject._id });
-      let monitorResult = await MonitorModel.CreateMonitor({ userId: result[0]._id });
+      let monitorResult = await MonitorModel.CreateMonitor({ userId: result[0]._id.toString() });
+      await ActivationCodeModel.UseActivationCode({ activationCode });
       await UserModel.SetValidSession({_id: result[0]._id});
       const accessToken = this.generateToken({ _id: result[0]._id, username: result[0].username }, '1h');
       let refreshToken: string;
@@ -68,7 +69,7 @@ export class UserService {
       await RefreshTokenModel.Insert({_id: refreshToken, userId: result[0]._id});
       return {success: true, data: {user: GetUser_O(result[0]), accessToken, refreshToken}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 
@@ -93,6 +94,9 @@ export class UserService {
       if (!await UserModel.IsMailUnused({ mail }))
         return {success: false, error: {status: 400, message: 'Mail already in use'}};
 
+      if (password && password.length < 10)
+        return {success: false, error: {status: 404, message: '\'password\' must contain at least 10 letters'}};
+
       if (username) {
         await UserModel.UpdateUsername({_id, username});
         await UserModel.SetInvalidSession({_id});
@@ -115,7 +119,7 @@ export class UserService {
       
       return {success: true, data: {user: GetUser_O(user)}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 
@@ -133,7 +137,7 @@ export class UserService {
       await UserModel.DeleteUser({_id});
       return {success: true, data: {message: 'Successfully Deleted'}};
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }    
   }
 

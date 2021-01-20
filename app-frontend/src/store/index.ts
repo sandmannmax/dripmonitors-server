@@ -2,13 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import createPersistedState from 'vuex-persistedstate';
+import config from '../config';
 
 Vue.use(Vuex);
 
 const refresh = async (refreshToken) => {
   let response, data, error;
   try {
-    response = await axios.post('http://localhost/api/auth/refresh', { refreshToken });
+    response = await axios.post(config.api_url + '/auth/refresh', { refreshToken });
     if (response && response.status == 200)
       data = response.data.accessToken;
     else
@@ -22,7 +23,7 @@ const refresh = async (refreshToken) => {
 const getMonitor = async accessToken => {
   let response, data, error;
   try {
-    response = await axios.get('http://localhost/api/monitor', {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.get(config.api_url + '/monitor', {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = response.data.monitor;
     else
@@ -36,7 +37,7 @@ const getMonitor = async accessToken => {
 const updateMonitor = async ({ webHook, name, imageUrl, accessToken }) => {
   let response, data, error;
   try {
-    response = await axios.patch('http://localhost/api/monitor', {webHook, name, imageUrl}, {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.patch(config.api_url + '/monitor', {webHook, name, imageUrl}, {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = response.data.monitor;
     else
@@ -50,13 +51,13 @@ const updateMonitor = async ({ webHook, name, imageUrl, accessToken }) => {
 const sendTestmessage = async accessToken => {
   let response, data, error;
   try {
-    response = await axios.post('http://localhost/api/monitor/testmessage', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.post(config.api_url + '/monitor/testmessage', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = 'Success';
     else
-      error = { message: 'Failed loading response in getMonitor', response };
+      error = { message: 'Failed loading response in sendTestmessage', response };
   } catch (err) {
-    error = { message: 'Error getMonitor', err };
+    error = { message: 'Error sendTestmessage', err };
   }
   return { data, error };
 }
@@ -69,25 +70,17 @@ export default new Vuex.Store({
   ],
   state: {
     user: undefined,
-    servicesAccess: [],
-    hasMonitor: false,
-    monitor: {
-      monitor: undefined,
-      monitoredProducts: [],
-      availableProducts: []
-    },
+    monitor: undefined,
   },
   getters: {
     user: state => state.user,
-    servicesAccess: state => state.servicesAccess,
     monitor: state => state.monitor,
-    hasMonitor: state => state.hasMonitor,
   },
   actions: {
     async login({ commit }, { username, password }) {
       let user, error, response;
       try {
-        response = await axios.post('http://localhost/api/auth/login', {username, password});
+        response = await axios.post(config.api_url + '/auth/login', {username, password});
         if (response && response.status == 200) {
           user = {
             name: response.data.user.username,
@@ -103,22 +96,18 @@ export default new Vuex.Store({
       }
       catch (err) {
         if (err.response) {
-          if (err.response.data.message == 'Username or Password Wrong')
-            error = 'Benutzername und Passwort stimmen nicht überein';
-          else {
-            console.log(err.response);
-            error = 'Login fehlgeschlagen';
-          }
+          console.log(err.response);
+          error = err.response.data.message;
         } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
+          error = 'Unexpected Error with connecting to the API';
         }
         return error;
       };
     },
-    async register({ commit }, { username, mail, password }) {
+    async activate({ commit }, { activationCode, username, mail, password }) {
       let user, error, response;
       try {
-        response = await axios.post('http://localhost/api/user', {username: username, mail: mail, password: password});
+        response = await axios.post(config.api_url + '/user', { activationCode, username, mail, password });
         console.log(response)
         if (response && response.status == 200) {
           user = {
@@ -135,16 +124,10 @@ export default new Vuex.Store({
       }
       catch (err) {
         if (err.response) {
-          if (err.response.data.message == 'Username already in use')
-            error = 'Benutzername wird schon verwendet';
-          else if (err.response.data.message == 'Mail already in use')
-            error = 'E-Mail Adresse wird schon verwendet';
-          else {
-            console.log(err.response);
-            error = 'Registrieren fehlgeschlagen';
-          }
+          console.log(err.response);
+          error = err.response.data.message;
         } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
+          error = 'Unexpected Error with connecting to the API';
         }
         return error;
       };
@@ -185,32 +168,12 @@ export default new Vuex.Store({
         return error;
       };
     },
-    async getServicesAccess({ commit }, { accessToken, refreshToken }) {
-      let response, error;
-      try {
-        response = await axios.get('http://localhost/api/user/services', {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200)
-          commit('setServicesAccess', response.data.services);
-        else
-          console.log(response);
-        return '';
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-          error = 'GetServicesAccess fehlgeschlagen';
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
     async logout({ commit }, { accessToken, refreshToken }) {
       let response;
       try {
         response = await axios.post('http://localhost/api/auth/logout', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
         if (response && response.status == 200) {
           commit('setUser', undefined);
-          commit('setServicesAccess', []);
         } else
           console.log(response);
         return '';
@@ -233,49 +196,6 @@ export default new Vuex.Store({
             return 'Refresh not working';
         }
       }
-    },
-    async getServices({ commit }) {
-      let response, error;
-      try {
-        response = await axios.get('http://localhost/api/services');
-        if (response && response.status == 200)
-          commit('setServices', response.data.services);
-        else
-          console.log(response);
-        return '';
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-          error = 'GetServices fehlgeschlagen';
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
-    async buyService({ commit }, { serviceId, serviceAccessKey, accessToken, refreshToken }) {
-      let error, response;
-      try {
-        response = await axios.post(`http://localhost/api/services/${serviceId}/buy`, {serviceAccessKey}, {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200) {
-          commit('setAccessToken', response.data.accessToken);
-        } else
-          console.log(response);
-        return '';
-      }
-      catch (err) {
-        if (err.response) {
-          if (err.response.data.message === '\'serviceAccessKey\' is invalid or already used')
-            error = 'Access-Key ist ungültig oder schon verwendet.';
-          else {
-            console.log(err.response);
-            error = 'Kauf fehlgeschlagen';
-          }
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      };
     },
     async getMonitor({ commit }, { accessToken, refreshToken }) {
       let response = await getMonitor(accessToken);
@@ -349,44 +269,6 @@ export default new Vuex.Store({
         return 'Fehler';
       }
     },
-    async getMonitoredProducts({ commit }, { accessToken, refreshToken }) {
-      let response, error;
-      try {
-        response = await axios.get('http://localhost/api/monitor/items', {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200)
-          commit('setMonitoredProducts', response.data.items);
-        else
-          console.log(response);
-        return '';
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-          error = 'GetMonitoredProducts fehlgeschlagen';
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
-    async getAvailableProducts({ commit }, { accessToken, refreshToken }) {
-      let response, error;
-      try {
-        response = await axios.get('http://localhost/api/monitor/products', {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200)
-          commit('setAvailableProducts', response.data.products);
-        else
-          console.log(response);
-        return '';
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response);
-          error = 'GetAvailableProducts fehlgeschlagen';
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
     async sendTestmessage({ commit }, { accessToken, refreshToken }) {
       let { data, error } = await sendTestmessage(accessToken);
       if (data) {
@@ -398,89 +280,16 @@ export default new Vuex.Store({
         return 'Fehler';
       }
     },
-    async addMonitoredProduct({ commit }, { productId, price, site, accessToken, refreshToken }) {
-      let response, error;
-      try {
-        response = await axios.post('http://localhost/api/monitor/items', {price, productId, site}, {headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (response && response.status == 200) {
-          commit('addMonitoredProduct', response.data.item);
-          error = '';
-        }
-        else {
-          error = 'Fehler';
-        }
-        return error;
-      } catch (err) {
-        if (err.response) {
-          if (err.response.data.message == 'Product is already monitored')
-            error = 'Produkt wird schon beobachtet'
-          else {
-            console.log(err.response);
-            error = 'AddMonitoredProducts fehlgeschlagen';
-          }
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
-    async deleteMonitoredProduct({ commit }, { productId, site, accessToken, refreshToken }) {
-      let response, error;
-      try {
-        response = await axios.delete(`http://localhost/api/monitor/items/${productId}`, {headers: {'Authorization': `Bearer ${accessToken}`}, data: {site}});
-        if (response && response.status == 200) {
-          commit('removeMonitoredProduct', productId);
-          error = '';
-        }
-        else {
-          error = 'Fehler';
-        }
-        return error;
-      } catch (err) {
-        if (err.response) {          
-          console.log(err.response);
-          error = 'DeleteMonitoredProduct fehlgeschlagen';
-        } else {
-          error = 'Unerwarteter Fehler beim erreichen der API ist aufgetreten.';
-        }
-        return error;
-      }
-    },
   },  
   mutations: {
     setUser: (state: any, user) => { 
       state.user = user;
     },
-    setServicesAccess: (state: any, servicesAccess) => {
-      state.servicesAccess = servicesAccess;
-      let hasM = false;
-      for (let i = 0; i < state.servicesAccess.length; i++){
-        if (state.servicesAccess[i] === 'monitor')
-          hasM = true;
-      }
-      state.hasMonitor = hasM;
-    },
     setAccessToken: (state: any, accessToken) => { 
       state.user.accessToken = accessToken;
     },
     setMonitorObject: (state: any, monitor) => {
-      state.monitor.monitor = monitor;
-    },
-    setMonitoredProducts: (state: any, monitoredProducts) => {
-      state.monitor.monitoredProducts = monitoredProducts;
-    },
-    addMonitoredProduct: (state: any, product) => {
-      state.monitor.monitoredProducts = [
-        ...state.monitor.monitoredProducts,
-        product
-      ];
-    },
-    removeMonitoredProduct: (state: any, id) => {
-      const i = state.monitor.monitoredProducts.map(item => item._id).indexOf(id);
-      state.monitor.monitoredProducts.splice(i, 1);
-    },
-    setAvailableProducts: (state: any, availableProducts) => {
-      state.monitor.availableProducts = availableProducts;
+      state.monitor = monitor;
     },
   }
 });

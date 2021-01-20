@@ -15,7 +15,7 @@ export namespace ActivationCodeModel {
   }
 
   export async function CreateActivationCode({ activationCode, mail }: { activationCode: string, mail: string }): Promise<void> {
-    await dbProvider.Insert('activation_codes', { activationCode, mail, used: false });
+    await dbProvider.Insert('activation_codes', { code: activationCode, mail, used: false });
   }
 
   export async function CheckActivationCode({ activationCode }: { activationCode: string }): Promise<boolean> {

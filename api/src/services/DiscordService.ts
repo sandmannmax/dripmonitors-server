@@ -28,7 +28,7 @@ export class DiscordService {
       });
       return {success: true, data: {message: 'Send Message successfully'}};  
     } catch (error) {
-      return {success: false, error};
+      return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: error}};
     }
   }
 }

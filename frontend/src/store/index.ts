@@ -5,10 +5,10 @@ import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
-const requestBetaAccess = async ({ email }) => {
+const requestBetaAccess = async ({ mail }) => {
   let response, data, error;
   try {
-    response = await axios.post('http://localhost/api/monitor/betaaccess', { email });
+    response = await axios.post('http://localhost/api/monitor/betaaccess', { mail });
     if (response && response.status == 200)
       data = response.data.message;
     else
@@ -32,8 +32,8 @@ export default new Vuex.Store({
     betaRequestSent: state => state.betaRequestSent,
   },
   actions: {
-    async requestBetaAccess({ commit }, { email }) {
-      let response = await requestBetaAccess({ email });
+    async requestBetaAccess({ commit }, { mail }) {
+      let response = await requestBetaAccess({ mail });
       if (response.data) {
         commit('setBetaRequestSent');
         return '';

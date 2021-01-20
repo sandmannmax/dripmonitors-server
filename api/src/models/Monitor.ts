@@ -1,13 +1,8 @@
 import { Container } from 'typedi';
 import { DatabaseProvider } from '../provider/DatabaseProvider';
-import { RedisProvider } from '../provider/RedisProvider';
 import { Monitor } from '../types/Monitor';
-import { MonitoredProduct } from '../types/MonitoredProduct';
-import { Product } from '../types/Product';
-import { UserJWT } from '../types/User';
 
 const dbProvider = Container.get(DatabaseProvider);
-const redisProvider = Container.get(RedisProvider);
 
 export namespace MonitorModel {
 
