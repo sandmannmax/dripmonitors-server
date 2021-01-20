@@ -10,13 +10,13 @@ export class User {
   public mail: string;
   public password: string;
   public salt: string;
+  public activationCodeId: string;
   public hasValidSession: boolean;
 }
 
 export class UserJWT {
   public _id: string;
   public username: string;
-  public services: Array<string>;
 }
 
 export function GetUser_O(user: User): User_O {

@@ -12,9 +12,9 @@ export namespace UserModel {
     await dbProvider.Update('users', {_id, active: true}, {hasValidSession: false});
   }
 
-  export async function CreateUser({username, mail, password, salt}: {username: string, mail: string, password: string, salt: string}): Promise<Array<User>> {
-    await dbProvider.Insert('users', {username, mail, password, salt, hasValidSession: false, active: true});
-    let result = await dbProvider.Find<User>('users', {username, mail, password, salt});
+  export async function CreateUser({ username, mail, password, salt, activationCodeId }: { username: string, mail: string, password: string, salt: string, activationCodeId: string }): Promise<Array<User>> {
+    await dbProvider.Insert('users', { username, mail, password, salt, activationCodeId, hasValidSession: false, active: true });
+    let result = await dbProvider.Find<User>('users', { username, mail, password, salt, activationCodeId });
     return result;
   }
 

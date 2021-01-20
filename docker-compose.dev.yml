@@ -47,17 +47,6 @@ services:
       - 27017:27017
     env_file: 
       - .env
-  redis:
-    image: redis
-    volumes:
-      - redisVolume:/data
-    ports:
-      - 6379:6379
-  redisInsight:
-    image: redislabs/redisinsight
-    ports:
-     - 8001:8001
 
 volumes:
   mongoVolume:
-  redisVolume:

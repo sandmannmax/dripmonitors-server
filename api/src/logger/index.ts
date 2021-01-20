@@ -5,22 +5,22 @@ export class Log {
 
   constructor(name) {
     this.logger = createLogger({
-        level: 'debug',
-        defaultMeta: { service: name },
-        transports: [
-          new transports.File({ 
-            filename: './logs/' + name + '.log',
-            format: format.combine(
-                format.errors({ stack: true }),
-                format.metadata(),
-                format.timestamp(),
-                format.json()
-            )
-          }),
-          new transports.Console({
-            format: format.simple(),
-          })
-        ]
+      level: 'debug',
+      defaultMeta: { service: name },
+      transports: [
+        new transports.File({ 
+          filename: './logs/' + name + '.log',
+          format: format.combine(
+            format.errors({ stack: true }),
+            format.metadata(),
+            format.timestamp(),
+            format.json()
+          )
+        }),
+        new transports.Console({
+          format: format.simple(),
+        })
+      ]
     });
   }
 

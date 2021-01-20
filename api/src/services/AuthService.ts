@@ -5,39 +5,37 @@ import { UserModel } from '../models/User';
 import JWT from 'jsonwebtoken';
 import config from '../config';
 import { GetUser_O } from '../types/User';
-import { ServiceAccessModel } from '../models/ServiceAccess';
+import { ActivationCodeModel } from '../models/ActivationCode';
 import { async } from 'crypto-random-string';
 import { RefreshTokenModel } from '../models/RefreshToken';
 
 @Service()
 export class AuthService {
-  async Login({username, password}: {username: string, password: string}): Promise<IResult> {
+  async Login({ username, password }: { username: string, password: string }): Promise<IResult> {
     try {
-      if (username && password) {
-        let user = await UserModel.FindUserByUsername({username});
-        if (user) {          
-          password = sha3_512(password + user.salt + config.pepper);
-          if (user.password == password) {
-            await UserModel.SetValidSession({_id: user._id});
+      if (!username)
+        return {success: false, error: {status: 404, message: '\'username\' is missing'}};
 
-            let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id.toString() });
-            let services: Array<string> = [];
-            for (let i = 0; i < serviceAccesses.length; i++)
-              services.push(serviceAccesses[i].service);
+      if (!password)
+        return {success: false, error: {status: 404, message: '\'password\' is missing'}};
 
-            const accessToken = this.generateToken({_id: user._id, username: user.username, services}, '1h');
-            let refreshToken: string;
-            do {
-              refreshToken = await async({length: 24});
-            } while (await RefreshTokenModel.CheckIsDuplicate({ _id: refreshToken }));
-            await RefreshTokenModel.Insert({_id: refreshToken, userId: user._id});
-            return {success: true, data: {user: GetUser_O(user), accessToken, refreshToken}};
-          } else
-            return {success: false, error: {status: 401, message: 'Username or Password Wrong'}};
-        } else
-          return {success: false, error: {status: 401, message: 'Username or Password Wrong'}};
-      } else
-        return {success: false, error: {status: 404, message: 'Username or Password Missing'}};
+      let user = await UserModel.FindUserByUsername({ username });
+      if (!user)
+        return {success: false, error: {status: 401, message: '\'username\' or \'password\' wrong'}};
+        
+      password = sha3_512(password + user.salt + config.pepper);      
+      if (user.password != password)
+        return {success: false, error: {status: 401, message: '\'username\' or \'password\' wrong'}};
+
+      await UserModel.SetValidSession({_id: user._id});
+
+      const accessToken = this.generateToken({_id: user._id, username: user.username}, '1h');
+      let refreshToken: string;
+      do {
+        refreshToken = await async({length: 24});
+      } while (await RefreshTokenModel.CheckIsDuplicate({ _id: refreshToken }));
+      await RefreshTokenModel.Insert({_id: refreshToken, userId: user._id});
+      return {success: true, data: {user: GetUser_O(user), accessToken, refreshToken}};
     } catch (error) {
       return {success: false, error};
     }    
@@ -45,11 +43,11 @@ export class AuthService {
 
   async Logout({_id}: {_id: string}): Promise<IResult> {
     try {
-      if (_id) {
-        await UserModel.SetInvalidSession({_id});
-        return {success: true, data: {message: 'Logged out successfully'}};
-      } else
-        return {success: false, data: {message: 'User Invalid'}};
+      if (!_id)
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: '_id is missing in AuthService.Logout'}};
+
+      await UserModel.SetInvalidSession({_id});
+      return {success: true, data: {message: 'Logged out successfully'}};
     } catch (error) {
       return {success: false, error};
     }    
@@ -79,14 +77,9 @@ export class AuthService {
       if (!user || !user.hasValidSession)
         return {success: false, error: {status: 400, message: '\'refreshToken\' invalid'}};
 
-      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id.toString() });
-      let services: Array<string> = [];
-      for (let i = 0; i < serviceAccesses.length; i++)
-        services.push(serviceAccesses[i].service);
+      const accessToken = this.generateToken({ _id: user._id, username: user.username }, '1h');
 
-      const accessToken = this.generateToken({_id: user._id, username: user.username, services}, '1h');
-
-      return {success: true, data: {accessToken}};
+      return {success: true, data: { accessToken }};
     } catch (error) {
       return {success: false, error};
     }    

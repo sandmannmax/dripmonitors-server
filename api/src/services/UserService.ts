@@ -7,7 +7,9 @@ import config from '../config';
 import { async } from 'crypto-random-string';
 import { GetUser_O } from '../types/User';
 import { RefreshTokenModel } from '../models/RefreshToken';
-import { ServiceAccessModel } from '../models/ServiceAccess';
+import { ActivationCodeModel } from '../models/ActivationCode';
+import { ActivationCode } from '../types/ActivationCode';
+import { MonitorModel } from '../models/Monitor';
 
 @Service()
 export class UserService {
@@ -26,30 +28,45 @@ export class UserService {
     }    
   }
 
-  async Register({username, mail, password}: {username: string, mail: string, password: string}): Promise<IResult> {
+  async Activate({ activationCode, username, mail, password }: { activationCode: string, username: string, mail: string, password: string }): Promise<IResult> {
     try {
-      if (username && mail && password) {
-        let isUsernameUnused = await UserModel.IsUsernameUnused({username});
-        let isMailUnused = await UserModel.IsMailUnused({mail});
-        if (isUsernameUnused) {
-          if (isMailUnused) {
-            let newSalt = await async({length: 20});
-            password = sha3_512(password + newSalt + config.pepper);
-            let result = await UserModel.CreateUser({username, mail, password, salt: newSalt});
-            await UserModel.SetValidSession({_id: result[0]._id});
-            const accessToken = this.generateToken({_id: result[0]._id, username: result[0].username, services: []}, '1h');
-            let refreshToken: string;
-            do {
-              refreshToken = await async({length: 24});
-            } while (await RefreshTokenModel.CheckIsDuplicate({ _id: refreshToken }))
-            await RefreshTokenModel.Insert({_id: refreshToken, userId: result[0]._id});
-            return {success: true, data: {user: GetUser_O(result[0]), accessToken, refreshToken}};
-          } else
-            return {success: false, error: {status: 404, message: 'Mail already in use'}};
-        } else
-          return {success: false, error: {status: 404, message: 'Username already in use'}};
-      } else
-        return {success: false, error: {status: 404, message: 'Username, Password or Mail Missing'}};
+      if (!activationCode)
+        return {success: false, error: {status: 404, message: '\'activationCode\' is missing'}};
+        
+      if (!username)
+        return {success: false, error: {status: 404, message: '\'username\' is missing'}};
+      
+      if (!mail)
+        return {success: false, error: {status: 404, message: '\'mail\' is missing'}};
+        
+      if (!password)
+        return {success: false, error: {status: 404, message: '\'password\' is missing'}};
+        
+      if (!await ActivationCodeModel.CheckActivationCode({ activationCode }))
+        return {success: false, error: {status: 404, message: '\'activationCode\' is invalid or already used'}};
+        
+      if (!await UserModel.IsUsernameUnused({username}))
+        return {success: false, error: {status: 404, message: '\'username\' is already in use'}};
+        
+      if (!await UserModel.IsMailUnused({mail}))
+        return {success: false, error: {status: 404, message: '\'mail\' is already in use'}};
+
+      if (password.length < 10)
+        return {success: false, error: {status: 404, message: '\'password\' must contain at least 10 letters'}};
+
+      let activationCodeObject: ActivationCode = ActivationCodeModel.GetActivationCode({ activationCode })[0];
+      let newSalt = await async({length: 20});
+      password = sha3_512(password + newSalt + config.pepper);
+      let result = await UserModel.CreateUser({ username, mail, password, salt: newSalt, activationCodeId: activationCodeObject._id });
+      let monitorResult = await MonitorModel.CreateMonitor({ userId: result[0]._id });
+      await UserModel.SetValidSession({_id: result[0]._id});
+      const accessToken = this.generateToken({ _id: result[0]._id, username: result[0].username }, '1h');
+      let refreshToken: string;
+      do {
+        refreshToken = await async({length: 24});
+      } while (await RefreshTokenModel.CheckIsDuplicate({ _id: refreshToken }))
+      await RefreshTokenModel.Insert({_id: refreshToken, userId: result[0]._id});
+      return {success: true, data: {user: GetUser_O(result[0]), accessToken, refreshToken}};
     } catch (error) {
       return {success: false, error};
     }    
@@ -104,33 +121,17 @@ export class UserService {
 
   async Delete({_id}: {_id: string}): Promise<IResult> {
     try {
-      if (_id) {
-        let result = await UserModel.FindUser({_id});
-        if (result) {          
-          await UserModel.DeleteUser({_id});
-          return {success: true, data: {message: 'Successfully Deleted'}};
-        } else
-          return {success: false, error: {status: 404, message: 'Can\'t find user'}};
-      } else
-        return {success: false, error: {status: 404, message: 'ID Missing'}};
-    } catch (error) {
-      return {success: false, error};
-    }    
-  }
-
-  async GetServices({_id}: {_id: string}): Promise<IResult> {
-    try {
       if (!_id)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `UserService.Get: _id empty.`}}; 
-       
-      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: _id });
+        return {success: false, error: {status: 404, message: 'ID Missing'}};
+        
+      let user = await UserModel.FindUser({_id});
 
-      let services: Array<string> = [];
-
-      for (let i = 0; i < serviceAccesses.length; i++)
-        services.push(serviceAccesses[i].service);
-
-      return {success: true, data: { services }};
+      if (!user)
+        return {success: false, error: {status: 404, message: 'Can\'t find user'}};
+ 
+      // TODO Delete Monitor, RefreshTokens and ActivationCode
+      await UserModel.DeleteUser({_id});
+      return {success: true, data: {message: 'Successfully Deleted'}};
     } catch (error) {
       return {success: false, error};
     }    

@@ -6,10 +6,9 @@ import { GetMonitor_O, Monitor } from '../types/Monitor';
 import { DiscordService } from './DiscordService';
 import { UserJWT } from '../types/User';
 import JWT from 'jsonwebtoken';
-import { ServiceAccessModel } from '../models/ServiceAccess';
+import { ActivationCodeModel } from '../models/ActivationCode';
 import config from '../config';
-import { BetaRequest } from '../types/BetaRequest';
-import { BetaRequestModel } from '../models/BetaRequest';
+import { async } from 'crypto-random-string';
 
 @Service()
 export class MonitorService {
@@ -19,39 +18,19 @@ export class MonitorService {
     this.discordService = Container.get(DiscordService);
   }
 
-  async RequestBetaAccess({ email }: { email: string }): Promise<IResult> {
-    try {
-      if (!email)
-        return {success: false, error: {status: 404, message: 'E-Mail missing', internalMessage: `MonitorService.RequestBetaAccess: email empty`}}; 
-
-      let result = await BetaRequestModel.GetBetaRequest({ email });
-      if (result.length != 0)
-        return {success: false, error: {status: 404, message: 'E-Mail already requested Beta-Testing-Access'}};
-
-      await BetaRequestModel.CreateBetaRequest({ email });
-      
-      return {success: true, data: { message: 'Request sent successfully' }};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
   async GetMonitor({ user }: { user: UserJWT }): Promise<IResult> {
     try {
       if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};      
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};    
 
       let result = await MonitorModel.GetMonitor({ userId: user._id });
       let monitor: Monitor;
       if (result.length == 0){
-        return {success: false, error: {status: 404, message: 'Object is not existing.'}};
+        return {success: false, error: {status: 404, message: 'Monitor is not existing.'}};      
       } else if (result.length == 1) {
         monitor = result[0];
         if (!monitor.botImage)
-          monitor.botImage = 'http://lazyshoebot.com/logo.png'
+          monitor.botImage = 'https://www.lazyshoebot.com/logoWide.png'
         if (!monitor.botName)
           monitor.botName = 'LSB Monitor'
       } else {
@@ -63,56 +42,10 @@ export class MonitorService {
     }
   }
 
-  async CreateMonitorAccess({ user, serviceAccessKey }: { user: UserJWT, serviceAccessKey: string }): Promise<IResult> {
-    try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: User empty`}};
-
-      let serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
-    
-      if (serviceAccesses.filter(obj => obj.service == 'monitor').length != 0)
-        return {success: false, error: {status: 400, message: 'You already own this Service'}};
-
-      if (!serviceAccessKey)
-        return {success: false, error: {status: 400, message: '\'serviceAccessKey\' is missing'}};
-      
-      if (!await ServiceAccessModel.CheckServiceAccessKey({ serviceAccessKey, service: 'monitor' }))
-        return {success: false, error: {status: 400, message: '\'serviceAccessKey\' is invalid or already used'}};
-
-      await ServiceAccessModel.UseServiceAccessKey({ serviceAccessKey });
-
-      await ServiceAccessModel.CreateServiceAccess({ userId: user._id, service: 'monitor' });
-
-      serviceAccesses = await ServiceAccessModel.FindServiceAccess({ userId: user._id });
-      let services: Array<string> = [];
-      for (let i = 0; i < serviceAccesses.length; i++)
-        services.push(serviceAccesses[i].service);
-
-      const accessToken = generateToken({_id: user._id, username: user.username, services}, '1h');
-
-      let result = await MonitorModel.GetMonitor({ userId: user._id });
-      let monitor: Monitor;
-      if (result.length == 1){
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: 'Monitor is already existing.'}};
-      } else if (result.length == 0) {
-        monitor = await MonitorModel.CreateMonitor({ userId: user._id });
-      } else {
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.CreateMonitor: Found more than one monitor for userId = ${user._id}`}};
-      }
-      return {success: true, data: {monitor: GetMonitor_O(monitor), accessToken}};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
   async UpdateMonitor({ user, webHook, name, imageUrl }: { user: UserJWT, webHook: string, name: string, imageUrl: string }): Promise<IResult> {
     try {
       if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.UpdateMonitor: User empty`}};
-
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};     
+        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.UpdateMonitor: User empty`}};  
 
       let result = await MonitorModel.GetMonitor({ userId: user._id });
 
@@ -148,9 +81,6 @@ export class MonitorService {
     try {
       if (!user)
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.SendTestMessage: User empty`}};
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};    
 
       let result = await MonitorModel.GetMonitor({ userId : user._id });
 
@@ -171,132 +101,22 @@ export class MonitorService {
     }
   }
 
-  async GetSupportedProducts({ user }: { user: UserJWT }): Promise<IResult> {
+  async RequestBetaAccess({ mail }: { mail: string }): Promise<IResult> {
     try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetSupportedProducts: User empty`}};
+      if (!mail)
+        return {success: false, error: {status: 404, message: '\'mail\' is missing'}}; 
+
+      let result = await ActivationCodeModel.FindActivationCodeByMail({ mail });
+      if (result.length != 0)
+        return {success: false, error: {status: 404, message: 'E-Mail already requested Beta-Testing-Access'}};
+
+      let activationCode;
+      do {
+        activationCode = await async({length: 24});
+      } while (await ActivationCodeModel.CheckIsDuplicate({ code: activationCode }))
+      await ActivationCodeModel.CreateActivationCode({ activationCode, mail });
       
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};    
-
-      let products = await MonitorModel.GetProducts();
-              
-      return {success: true, data: { products }};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
-  async GetMonitoredItems({ user }: { user: UserJWT }): Promise<IResult> {
-    try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}};      
-
-      let result = await MonitorModel.GetMonitoredItems({ userId: user._id });
-
-      return {success: true, data: { items: result }};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
-  async CreateMonitoredItem({ user, price, productId, site }: { user: UserJWT, price: number, productId: string, site: string }): Promise<IResult> {
-    try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}}; 
-        
-      if (!price)
-        return {success: false, error: {status: 404, message: '\'price\' missing'}};
-        
-      if (typeof price != 'number') {
-        try {
-          price = Number(price);
-        } catch {
-          return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
-        }
-      }
-        
-      if (!productId)
-        return {success: false, error: {status: 404, message: '\'productId\' missing'}};
-        
-      if (!site)
-        return {success: false, error: {status: 404, message: '\'site\' missing'}};
-
-      if (!await MonitorModel.IsProductValid({ site, productId }))
-        return {success: false, error: {status: 404, message: '\'site\' or \'productId\' is invalid'}};
-
-      if (await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
-        return {success: false, error: {status: 404, message: 'Product is already monitored'}};
-
-      let result = await MonitorModel.AddMonitoredItem({ userId: user._id, site, productId, price });
-      
-      return {success: true, data: { item: result }};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
-  async UpdateMonitoredItem({ user, price, productId, site }: { user: UserJWT, price: number, productId: string, site: string }): Promise<IResult> {
-    try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}}; 
-        
-      if (!price)
-        return {success: false, error: {status: 404, message: '\'price\' missing'}};
-        
-      if (typeof price != 'number')
-        return {success: false, error: {status: 404, message: '\'price\' is invalid'}};
-        
-      if (!site)
-        return {success: false, error: {status: 404, message: '\'site\' missing'}};
-
-      if (!await MonitorModel.IsProductValid({ site, productId }))
-        return {success: false, error: {status: 404, message: '\'site\' or \'id\' is invalid'}};
-
-      if (!await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
-        return {success: false, error: {status: 404, message: 'Product is not monitored'}};
-
-      let result = await MonitorModel.UpdateMonitoredItem({ userId: user._id, site, productId, price });
-      
-      return {success: true, data: { item: result }};
-    } catch (error) {
-      return {success: false, error};
-    }
-  }
-
-  async DeleteMonitoredItem({ user, productId, site }: { user: UserJWT, productId: string, site: string }): Promise<IResult> {
-    try {
-      if (!user)
-        return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: User empty`}};
-
-      
-      if (!hasMonitorPermission(user))
-        return {success: false, error: {status: 403}}; 
-        
-      if (!site)
-        return {success: false, error: {status: 404, message: '\'site\' missing'}};
-
-      if (!await MonitorModel.IsProductValid({ site, productId }))
-        return {success: false, error: {status: 404, message: '\'site\' or \'id\' is invalid'}};
-
-      if (!await MonitorModel.IsProductMonitored({ userId: user._id, site, productId }))
-        return {success: false, error: {status: 404, message: 'Product is not monitored'}};
-
-      await MonitorModel.DeleteMonitoredItem({ userId: user._id, site, productId });
-      
-      return {success: true, data: { message: 'Deleted monitored Item'}};
+      return {success: true, data: { message: 'Request sent successfully' }};
     } catch (error) {
       return {success: false, error};
     }
@@ -305,10 +125,4 @@ export class MonitorService {
 
 function generateToken(data, expiration: string) {
   return JWT.sign({data}, config.jwtSecret, { expiresIn: expiration });
-}
-
-function hasMonitorPermission(user: UserJWT) {
-  if (!user || !user.services)
-    return false;
-  return user.services.filter(object => object === "monitor").length != 0
 }

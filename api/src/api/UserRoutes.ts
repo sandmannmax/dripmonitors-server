@@ -27,8 +27,8 @@ export class UserRoutes {
     });
 
     this.router.post('/', async (req, res, next) => {
-      const { username, mail, password } = req.body;
-      let result = await this.userService.Register({username, mail, password});
+      const { activationCode, username, mail, password } = req.body;
+      let result = await this.userService.Activate({ activationCode, username, mail, password });
       if (result.success)
         res.json(result.data);
       else if (result.error)
@@ -56,19 +56,6 @@ export class UserRoutes {
     this.router.delete('/', IsAuth, async (req, res, next) => {
       let userJWT: UserJWT = req['user'];
       let result = await this.userService.Delete({_id: userJWT._id});
-      if (result.success)
-        res.json(result.data);
-      else if (result.error)
-        next(result.error);
-      else {
-        let err: IError = {status: 500, message: 'Fehler'};
-        next(err);
-      }
-    });
-  
-    this.router.get('/services', IsAuth, async (req, res, next) => {
-      const userJWT: UserJWT = req['user'];
-      const result = await this.userService.GetServices({ _id: userJWT._id });
       if (result.success)
         res.json(result.data);
       else if (result.error)

@@ -73,8 +73,8 @@
               }
             }
           },
-          "400": {
-            "description": "\\'username\\' is already existing | \\'mail\\' is already in use",
+          "404": {
+            "description": "'activationCode' is invalid or already used | 'username' is already existing | 'mail' is already in use | 'password' must contain at least 10 letters",
             "schema": {
               "type": "object",
               "properties": {
@@ -581,9 +581,9 @@
         "description": "Requesting Access for Beta-Testing",
         "parameters": [
           {
-            "name": "e-mail",
+            "name": "mail",
             "in": "body",
-            "description": "e-mail",
+            "description": "mail",
             "required": true,
             "type": "string"
           }
