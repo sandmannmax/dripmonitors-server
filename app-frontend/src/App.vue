@@ -1,23 +1,14 @@
 <template>
   <div id="app">
-    <ControlBar/>
-    <div class="content-wrapper">
-      <router-view/>
-    </div>    
-    <Footer/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import ControlBar from './components/ControlBar'
-import Footer from './components/Footer'
+import { Component, Vue } from 'vue-property-decorator';
 
-export default {
-  components: {
-    ControlBar,
-    Footer
-  },
-}
+@Component
+export default class App extends Vue { }
 </script>
 
 <style>
@@ -27,17 +18,12 @@ export default {
     url(../public/Questrial-Regular.ttf) format("truetype");
   }
 
-  #app {
+  #app {   
     font-family: Questrial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+    color: #dfdfdf;
+    background-color: rgb(22, 21, 21); 
     min-height: 100vh;
-  }
-
-  .content-wrapper {
-    min-height: calc(100vh - 160px);
-    margin-top: 10px;
-    margin-bottom: 4px;
   }
 </style>

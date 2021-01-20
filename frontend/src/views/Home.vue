@@ -2,10 +2,10 @@
   <div class="home">
     <div class="container">
       <h1 class="text-center">
-        <img src="logoFull.png" width="500"/>
+        <img src="logoFull.png" width="300"/>
       </h1>
       <div class="text-center margin">
-        <p>Welcome to lazyshoebot.</p>
+        <p>Get your customizable Sneaker-Monitor for your Cook-Group.</p>
       </div>     
     </div>
   </div>

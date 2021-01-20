@@ -4,11 +4,21 @@
       <div class="col-sm-11 col-md-9 col-lg-7 mx-auto" v-if="!user">
         <div class="image-container">
           <img src="logo.png" alt="lazyshoebot logo" id="logo"/>
-        </div>          
+        </div>
         <form class="form-signin">
+          <div class="form-label-group">
+            <input type="text" id="inputActivationCode" class="form-control" v-model="input.activationCode" placeholder="Activation-Code" required autofocus>
+            <label for="inputActivationCode">Activation-Code</label>
+          </div>
+
           <div class="form-label-group">
             <input type="text" id="inputUsername" class="form-control" v-model="input.username" placeholder="Username" required autofocus>
             <label for="inputUsername">Username</label>
+          </div>
+
+          <div class="form-label-group">
+            <input type="text" id="inputMail" class="form-control" v-model="input.mail" placeholder="E-Mail" required autofocus>
+            <label for="inputMail">E-Mail</label>
           </div>
 
           <div class="form-label-group">
@@ -16,13 +26,13 @@
             <label for="inputPassword">Password</label>
           </div>
 
-          <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="loginForm()">Login</button>
-        </form>
+          <button class="btn btn-lg btnClass btn-block text-uppercase" type="button" v-on:click="activateForm()">Activate</button>
+        </form>                      
         <div class="divCenterMargin">
           <div class="error">{{ error }}</div>
         </div>
         <div class="divCenterMargin">
-          Don't have an account yet? Activate your monitor <router-link to="/activate">here</router-link>.
+          You already have an account? Login <router-link to="/login">here</router-link>.
         </div>
       </div>
     </div>
@@ -34,32 +44,47 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
 @Component
-export default class Login extends Vue {
-  @Action login;
+export default class Activate extends Vue {
+  @Action activate;
   @Getter user;
-
-  input = {
-    username: '',
-    password: ''
-  };
-  error = ''
 
   mounted() {
     if (this.user)
       this.$router.push({name: 'home'});
   }
 
-  async loginForm() {
-    this.error = '';
-    if (this.input.username != '' && this.input.password != '') {
-      this.error = await this.login({username: this.input.username, password: this.input.password});
-      if (this.user) {
-        this.$router.push({name: 'home'});
-      }
-    } else if (this.input.username == '')
+  input = {
+    activationCode: '',
+    username: '',
+    mail: '',
+    password: ''
+  };
+  error = ''
+
+  async activateForm() {
+    if (this.input.activationCode == '') {
+      this.error = 'Please provide your Activation-Code';
+      return;
+    }
+
+    if (this.input.username == '') {
       this.error = 'Please provide a username';
-    else
+      return;
+    }
+
+    if (this.input.mail == '' || !(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(this.input.mail))) {
+      this.error = 'Please provide a valid E-Mail address';
+      return;
+    }
+
+    if (this.input.password == '') {
       this.error = 'Please provide a password';
+      return;
+    }
+
+    this.error = await this.activate({ activationCode: this.input.activationCode, username: this.input.username, mail: this.input.mail, password: this.input.password });
+    if (this.user)
+      this.$router.push({name: 'home'});
   }
 }
 </script>
@@ -92,6 +117,10 @@ export default class Login extends Vue {
     font-weight: bold;
     padding: 1rem;
     transition: all 0.2s;
+  }
+
+  h3 {
+    text-align: center;
   }
 
   .inputForm {
@@ -169,7 +198,7 @@ export default class Login extends Vue {
 
   .btnClass {
     color: white;
-    background-color: #db3e3e;    
+    background-color: #db3e3e;
   }
 
   .error {

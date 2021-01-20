@@ -16,14 +16,14 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/activate',
+    name: 'activate',
+    component: () => import('../views/Activate.vue')
+  },
+  {
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue')
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import('../views/Register.vue')
   },
   {
     path: '/services',
@@ -36,14 +36,14 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/Monitor.vue')
   },
   {
-    path: '/impressum',
-    name: 'impressum',
-    component: () => import('../views/Impressum.vue')
+    path: '/privacy',
+    name: 'privacy',
+    component: () => import('../views/Privacy.vue')
   },
   {
-    path: '/agb',
-    name: 'agb',
-    component: () => import('../views/AGB.vue')
+    path: '/terms',
+    name: 'terms',
+    component: () => import('../views/Terms.vue')
   },
 ]
 

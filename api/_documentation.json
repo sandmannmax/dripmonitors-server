@@ -1,74 +1,8 @@
 {
-  "paths_new": {
-    "/monitor/betaaccess": {
-      "post": {
-        "description": "Requesting Access for Beta-Testing"
-      },
-      "parameters": [
-        {
-          "name": "e-mail",
-          "in": "body",
-          "description": "e-mail",
-          "required": true,
-          "type": "string"
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Request sent successfully",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404a": {
-          "description": "E-Mail already requested Beta-Testing-Access",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404b": {
-          "description": "E-Mail missing",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Unexpected Server Error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
   "paths": {
     "/user": {
       "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get User Object",
-        "operationId": "getUser",
+        "description": "Get User Object",
         "parameters": [
           {
             "name": "Authentication",
@@ -82,29 +16,40 @@
           "200": {
             "description": "User Object",
             "schema": {
-              "$ref": "#/definitions/inline_response_200"
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/definitions/UserObject"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       },
       "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Create a User",
-        "operationId": "createUser",
+        "description": "Create a User",
         "parameters": [
           {
             "in": "body",
@@ -120,29 +65,40 @@
           "200": {
             "description": "Created User Object",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_1"
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/definitions/UserObject"
+                }
+              }
             }
           },
           "400": {
             "description": "\\'username\\' is already existing | \\'mail\\' is already in use",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete a User",
-        "operationId": "deleteUser",
+        "description": "Delete a User",
         "parameters": [
           {
             "name": "Authentication",
@@ -156,29 +112,40 @@
           "200": {
             "description": "Deleted User",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Update a User",
-        "operationId": "updateUser",
+        "description": "Update a User",
         "parameters": [
           {
             "name": "Authentication",
@@ -201,103 +168,45 @@
           "200": {
             "description": "Updated User Object",
             "schema": {
-              "$ref": "#/definitions/inline_response_200"
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/definitions/UserObject"
+                }
+              }
             }
           },
           "400": {
             "description": "\\'username\\' is already existing | \\'mail\\' is already in use",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      }
-    },
-    "/user/services": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get Services a User has Access to",
-        "operationId": "getServicesAccess",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Array of Services",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_2"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      }
-    },
-    "/user/confirmation-notimplemented": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Confirm a Users Mail",
-        "operationId": "confirmMail",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "id",
-            "description": "id for Confirmation",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Confirmed Mail",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "404": {
-            "description": "\\'confirmationId\\' invalid",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -305,11 +214,7 @@
     },
     "/auth/login": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Login for a User",
-        "operationId": "loginUser",
+        "description": "Login for a User",
         "parameters": [
           {
             "in": "body",
@@ -325,25 +230,51 @@
           "200": {
             "description": "Login Successfull",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_1"
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/definitions/UserObject"
+                },
+                "accessToken": {
+                  "type": "string"
+                },
+                "refreshToken": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
             "description": "\\'username\\' or \\'password\\' missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Invalid credentials",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -351,11 +282,7 @@
     },
     "/auth/logout": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Logout a User",
-        "operationId": "logoutUser",
+        "description": "Logout a User",
         "parameters": [
           {
             "name": "Authentication",
@@ -369,19 +296,34 @@
           "200": {
             "description": "Logout Successfull",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -389,39 +331,48 @@
     },
     "/auth/refresh": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Get a new AccessToken",
-        "operationId": "refreshToken",
+        "description": "Get a new AccessToken",
         "parameters": [
           {
             "in": "body",
             "name": "refreshToken",
             "description": "RefreshToken",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/refreshToken"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Refresh Successfull",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_3"
+              "type": "object",
+              "properties": {
+                "accessToken": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
             "description": "\\'refreshToken\\' expired | \\'refreshToken\\' invalid | \\'refreshToken\\' missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -429,11 +380,7 @@
     },
     "/monitor": {
       "get": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Get the User specific Monitor Object",
-        "operationId": "getMonitor",
+        "description": "Get the User specific Monitor Object",
         "parameters": [
           {
             "name": "Authentication",
@@ -447,91 +394,51 @@
           "200": {
             "description": "Monitor Object",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_4"
+              "type": "object",
+              "properties": {
+                "monitor": {
+                  "$ref": "#/definitions/MonitorObject"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "404": {
             "description": "Object is not existing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Get Access to Monitor",
-        "operationId": "getMonitorAccess",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "serviceAccessKey",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/serviceAccessKey"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "New Monitor Object and new AccessToken",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_5"
-            }
-          },
-          "400": {
-            "description": "serviceAccessToken invalid or already used",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "404": {
-            "description": "Access to Monitor is already existing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Update the User specific Monitor Object",
-        "operationId": "updateMonitor",
+        "description": "Update the User specific Monitor Object",
         "parameters": [
           {
             "name": "Authentication",
@@ -554,31 +461,56 @@
           "200": {
             "description": "Updated User Object",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_4"
+              "type": "object",
+              "properties": {
+                "monitor": {
+                  "$ref": "#/definitions/MonitorObject"
+                }
+              }
             }
           },
           "400": {
             "description": "No property of \\'webHook\\', \\'name\\' or \\'imageUrl\\' given",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "404": {
             "description": "Object is not existing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -586,11 +518,7 @@
     },
     "/monitor/testmessage": {
       "post": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Create the User specific Monitor Object",
-        "operationId": "sendTestmessage",
+        "description": "Send Testmessage to Webhook for Monitor",
         "parameters": [
           {
             "name": "Authentication",
@@ -602,289 +530,111 @@
         ],
         "responses": {
           "200": {
-            "description": "Created Monitor Object",
+            "description": "Message sent",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
             "description": "Token expired | Token invalid | Token missing",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
-          "403": {
-            "description": "Forbidden"
-          },
           "404": {
-            "description": "Monitor Webhook is not configured | Monitor is not existing",
+            "description": "Monitor Webhook is not configured",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       }
     },
-    "/monitor/items": {
-      "get": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Get the User specific MonitoredItem Objects",
-        "operationId": "getMonitoredItems",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Array of MonitoredItem Objects",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_6"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      },
+    "/monitor/betaaccess": {
       "post": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Create a User specific MonitoredItem Object",
-        "operationId": "createMonitoredItem",
+        "description": "Requesting Access for Beta-Testing",
         "parameters": [
           {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          },
-          {
+            "name": "e-mail",
             "in": "body",
-            "name": "monitoredItem",
-            "description": "monitoredItem to Create",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MonitoredItemCreate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Created MonitoredItem Object",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_7"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Input is wrong or already existing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      }
-    },
-    "/monitor/items/{id}": {
-      "delete": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Delete a User specific MonitoredItem Object",
-        "operationId": "deleteMonitoredItem",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "site",
-            "description": "site of product",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/site"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Deleted MonitoredItem",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "404": {
-            "description": "Object is not existing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Update a User specific MonitoredItem Object",
-        "operationId": "updateMonitoredItem",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "monitoredItem",
-            "description": "monitoredItem to update",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/MonitoredItemUpdate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Updated MonitoredItem Object",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_7"
-            }
-          },
-          "400": {
-            "description": "No property of \\'price\\' or \\'activeStatus\\' given",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "404": {
-            "description": "Object is not existing",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          },
-          "500": {
-            "description": "Unexpected Server Error",
-            "schema": {
-              "$ref": "#/definitions/inline_response_401"
-            }
-          }
-        }
-      }
-    },
-    "/monitor/products": {
-      "get": {
-        "tags": [
-          "Monitor"
-        ],
-        "summary": "Get all SupportedProduct Objects for the Monitor Service",
-        "operationId": "getSupportedProductsMonitorService",
-        "parameters": [
-          {
-            "name": "Authentication",
-            "in": "header",
-            "description": "accessToken",
+            "description": "e-mail",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Array of SupportedProduct Objects",
+            "description": "Request sent successfully",
             "schema": {
-              "$ref": "#/definitions/inline_response_200_8"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
-          "401": {
-            "description": "Token expired | Token invalid | Token missing",
+          "404a": {
+            "description": "E-Mail already requested Beta-Testing-Access",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404b": {
+            "description": "E-Mail missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "500": {
             "description": "Unexpected Server Error",
             "schema": {
-              "$ref": "#/definitions/inline_response_401"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
-      }
+      }  
     }
   },
   "definitions": {
@@ -920,11 +670,15 @@
     "UserCreate": {
       "type": "object",
       "required": [
+        "activationCode",
         "mail",
         "password",
         "username"
       ],
       "properties": {
+        "activationCode": {
+          "type": "string"
+        },
         "username": {
           "type": "string"
         },
@@ -968,318 +722,6 @@
         "imageUrl": {
           "type": "string"
         }
-      }
-    },
-    "MonitoredItemObject": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "price": {
-          "type": "number"
-        },
-        "product": {
-          "$ref": "#/definitions/SupportedProductObject"
-        }
-      }
-    },
-    "MonitoredItemCreate": {
-      "type": "object",
-      "required": [
-        "price",
-        "productId"
-      ],
-      "properties": {
-        "price": {
-          "type": "number"
-        },
-        "productId": {
-          "type": "string"
-        },
-        "site": {
-          "type": "string"
-        }
-      }
-    },
-    "MonitoredItemUpdate": {
-      "type": "object",
-      "properties": {
-        "price": {
-          "type": "number"
-        },
-        "site": {
-          "type": "string"
-        }
-      }
-    },
-    "SupportedProductObject": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "site": {
-          "type": "string"
-        },
-        "soldOut": {
-          "type": "boolean"
-        }
-      }
-    },
-    "ServiceObject": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "normalPrice": {
-          "type": "number"
-        },
-        "price": {
-          "type": "number"
-        },
-        "hasSpecialPrice": {
-          "type": "boolean"
-        },
-        "billingType": {
-          "type": "string",
-          "enum": [
-            "oneTime",
-            "yearly",
-            "monthly"
-          ]
-        }
-      }
-    },
-    "inline_response_200": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/UserObject"
-        }
-      }
-    },
-    "inline_response_401": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_1": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/UserObject"
-        },
-        "accessToken": {
-          "type": "string"
-        },
-        "refreshToken": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_2_services": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_2": {
-      "type": "object",
-      "properties": {
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/inline_response_200_2_services"
-          }
-        }
-      }
-    },
-    "id": {
-      "type": "object",
-      "properties": {
-        "confirmationId": {
-          "type": "string"
-        }
-      }
-    },
-    "refreshToken": {
-      "type": "object",
-      "required": [
-        "refreshToken"
-      ],
-      "properties": {
-        "refreshToken": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_3": {
-      "type": "object",
-      "properties": {
-        "accessToken": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_4": {
-      "type": "object",
-      "properties": {
-        "monitor": {
-          "$ref": "#/definitions/MonitorObject"
-        }
-      }
-    },
-    "serviceAccessKey": {
-      "type": "object",
-      "properties": {
-        "serviceAccessKey": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_5": {
-      "type": "object",
-      "properties": {
-        "monitor": {
-          "$ref": "#/definitions/MonitorObject"
-        },
-        "accessToken": {
-          "type": "string"
-        }
-      }
-    },
-    "monitor": {
-      "type": "object",
-      "properties": {
-        "webHook": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "imageUrl": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_6": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MonitoredItemObject"
-          }
-        }
-      }
-    },
-    "inline_response_200_7": {
-      "type": "object",
-      "properties": {
-        "item": {
-          "$ref": "#/definitions/MonitoredItemObject"
-        }
-      }
-    },
-    "site": {
-      "type": "object",
-      "properties": {
-        "site": {
-          "type": "string"
-        }
-      }
-    },
-    "inline_response_200_8_products": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "site": {
-          "type": "string"
-        },
-        "soldOut": {
-          "type": "boolean"
-        }
-      }
-    },
-    "inline_response_200_8": {
-      "type": "object",
-      "properties": {
-        "products": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/inline_response_200_8_products"
-          }
-        }
-      }
-    }
-  },
-  "responses": {
-    "UnauthorizedError": {
-      "description": "Token expired | Token invalid | Token missing",
-      "schema": {
-        "$ref": "#/definitions/inline_response_401"
-      }
-    },
-    "InvalidCredentialsError": {
-      "description": "Invalid credentials",
-      "schema": {
-        "$ref": "#/definitions/inline_response_401"
-      }
-    },
-    "TokenInvalidError": {
-      "description": "Token invalid",
-      "schema": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "ObjectNotExistingError": {
-      "description": "Object is not existing",
-      "schema": {
-        "$ref": "#/definitions/inline_response_401"
-      }
-    },
-    "ServerError": {
-      "description": "Unexpected Server Error",
-      "schema": {
-        "$ref": "#/definitions/inline_response_401"
       }
     }
   }
