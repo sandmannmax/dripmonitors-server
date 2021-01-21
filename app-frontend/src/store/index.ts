@@ -8,8 +8,9 @@ Vue.use(Vuex);
 
 const refresh = async (refreshToken) => {
   let response, data, error;
+  let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
   try {
-    response = await axios.post(config.api_url + '/auth/refresh', { refreshToken });
+    response = await axios.post(api_url + '/auth/refresh', { refreshToken });
     if (response && response.status == 200)
       data = response.data.accessToken;
     else
@@ -22,8 +23,9 @@ const refresh = async (refreshToken) => {
 
 const getMonitor = async accessToken => {
   let response, data, error;
+  let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
   try {
-    response = await axios.get(config.api_url + '/monitor', {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.get(api_url + '/monitor', {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = response.data.monitor;
     else
@@ -36,8 +38,9 @@ const getMonitor = async accessToken => {
 
 const updateMonitor = async ({ webHook, name, imageUrl, accessToken }) => {
   let response, data, error;
+  let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
   try {
-    response = await axios.patch(config.api_url + '/monitor', {webHook, name, imageUrl}, {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.patch(api_url + '/monitor', {webHook, name, imageUrl}, {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = response.data.monitor;
     else
@@ -50,8 +53,9 @@ const updateMonitor = async ({ webHook, name, imageUrl, accessToken }) => {
 
 const sendTestmessage = async accessToken => {
   let response, data, error;
+  let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
   try {
-    response = await axios.post(config.api_url + '/monitor/testmessage', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
+    response = await axios.post(api_url + '/monitor/testmessage', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
     if (response && response.status == 200)
       data = 'Success';
     else
@@ -79,8 +83,9 @@ export default new Vuex.Store({
   actions: {
     async login({ commit }, { username, password }) {
       let user, error, response;
+      let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
       try {
-        response = await axios.post(config.api_url + '/auth/login', {username, password});
+        response = await axios.post(api_url + '/auth/login', {username, password});
         if (response && response.status == 200) {
           user = {
             name: response.data.user.username,
@@ -106,8 +111,9 @@ export default new Vuex.Store({
     },
     async activate({ commit }, { activationCode, username, mail, password }) {
       let user, error, response;
+      let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
       try {
-        response = await axios.post(config.api_url + '/user', { activationCode, username, mail, password });
+        response = await axios.post(api_url + '/user', { activationCode, username, mail, password });
         console.log(response)
         if (response && response.status == 200) {
           user = {
@@ -134,8 +140,9 @@ export default new Vuex.Store({
     },
     async updateUser({ commit }, { username, mail, password, oldPassword, accessToken, refreshToken }) {
       let user, error, response;
+      let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
       try {
-        response = await axios.patch('http://localhost/api/user', {username, mail, password, oldPassword}, {headers: {'Authorization': `Bearer ${accessToken}`}});
+        response = await axios.patch(api_url + '/user', {username, mail, password, oldPassword}, {headers: {'Authorization': `Bearer ${accessToken}`}});
         console.log(response)
         if (response && response.status == 200) {
           user = {
@@ -170,8 +177,9 @@ export default new Vuex.Store({
     },
     async logout({ commit }, { accessToken, refreshToken }) {
       let response;
+      let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
       try {
-        response = await axios.post('http://localhost/api/auth/logout', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
+        response = await axios.post(api_url + '/auth/logout', null, {headers: {'Authorization': `Bearer ${accessToken}`}});
         if (response && response.status == 200) {
           commit('setUser', undefined);
         } else
@@ -184,7 +192,7 @@ export default new Vuex.Store({
           if (r.data) {
             accessToken = r.data;
             commit('setAccessToken', accessToken);
-            response = await axios.post('http://localhost/api/auth/logout', null, {headers: {'Authorization': `Bearer ${accessToken}`}})
+            response = await axios.post(api_url + '/auth/logout', null, {headers: {'Authorization': `Bearer ${accessToken}`}})
             if (response && response.status == 200) {
               commit('setUser', undefined);
               commit('setServicesAccess', []);

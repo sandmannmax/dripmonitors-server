@@ -2,13 +2,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import createPersistedState from 'vuex-persistedstate';
+import config from '../config';
 
 Vue.use(Vuex);
 
 const requestBetaAccess = async ({ mail }) => {
   let response, data, error;
+  let api_url = config.api_url ? config.api_url : 'https://api.lazyshoebot.com'
   try {
-    response = await axios.post('http://localhost/api/monitor/betaaccess', { mail });
+    response = await axios.post(api_url + '/monitor/betaaccess', { mail });
     if (response && response.status == 200)
       data = response.data.message;
     else

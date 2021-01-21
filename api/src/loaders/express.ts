@@ -13,7 +13,7 @@ export default async (app: Application) => {
 
   app.use(json());
   app.use(cors());
-  app.use('/api', api());
+  app.use('/', api());
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     let err: IError = {message: 'Not Found', status: 404};

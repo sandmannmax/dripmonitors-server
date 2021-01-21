@@ -2,7 +2,7 @@
   <div class="home">
     <div class="container">
       <h1 class="text-center">
-        <img src="logoFull.png" width="300"/>
+        <img src="logo.png" width="300"/>
       </h1>
       <div class="text-center margin">
         <p>Get your customizable Sneaker-Monitor for your Cook-Group.</p>

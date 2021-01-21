@@ -1,12 +1,16 @@
 version: '3.4'
 
 services:
-  reverse-proxy:
-    image: nginx:1.19.5
+  nginx:
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-nginx:latest
     depends_on:
       - api
+      - frontend
+      - app-frontend
     links:
       - api
+      - frontend
+      - app-frontend
     ports:
       - 80:80
       - 443:443
@@ -14,31 +18,36 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-  certbot:
-    image: certbot/certbot:1.7.0
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
   api:
-    image: lsb-api
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:latest
     depends_on:
       - db
-      - redis
     links:
       - db
-      - redis
-    volumes:
-      - ./web/src:/usr/src/app/src
     env_file: 
       - .env
-  monitor:
-    image: lsb-monitor
-    depends_on:
-      - redis
-    links:
-      - redis
     volumes:
-      - ./services/monitor/src:/usr/src/app/src
+      - ./data/api/logs:/home/node/app/logs
+  frontend:
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-frontend:latest
+    depends_on:
+      - api
+    links:
+      - api
+  app-frontend:
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-app-frontend:latest
+    depends_on:
+      - api
+    links:
+      - api
+  # monitor:
+  #   image: lsb-monitor
+  #   depends_on:
+  #     - redis
+  #   links:
+  #     - redis
+  #   volumes:
+  #     - ./services/monitor/src:/usr/src/app/src
   db:
     image: mongo
     volumes:
@@ -47,17 +56,6 @@ services:
       - 27017:27017
     env_file: 
       - .env
-  redis:
-    image: redis
-    volumes:
-      - redisVolume:/data
-    ports:
-      - 6379:6379
-  redisInsight:
-    image: redislabs/redisinsight
-    ports:
-     - 8001:8001
 
 volumes:
   dbVolume:
-  redisVolume:
