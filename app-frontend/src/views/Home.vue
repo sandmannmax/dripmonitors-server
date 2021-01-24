@@ -6,7 +6,7 @@
         <h3 class="text-center">lazyshoebot - Monitor</h3>
         <div id="monitorConfiguration">
           <div class="col-sm-11 col-md-9 col-lg-7 mx-auto">
-            <div class="monitor">
+            <div class="monitor" v-if="monitor">
               <div id="botContainer">
                 <b-img v-bind:src="monitor.botImage" id="botImage"/>
               </div>            

@@ -43,31 +43,31 @@ export class SupremeMonitor {
           await this.redisService.AddProduct('supreme', products[i]);
         } else {
           let sendMessage = false;
-          let oldSoldOutState = item.soldOut == 'true';
+          let oldSoldOutState = item.soldOut;
           if (oldSoldOutState != products[i].soldOut) {              
             await this.redisService.ChangeSoldOutState('supreme', products[i]._id, products[i].soldOut);
           }  
-          if (item.active == 'false') {
+          if (item.active) {
             await this.redisService.ChangeActiveState('supreme', products[i]._id, true);            
-            if (!products[i].soldOut && await this.redisService.IsMonitoredProduct('supreme', products[i]._id)) {
-              sendMessage = true;
-            }
+            // if (!products[i].soldOut && await this.redisService.IsMonitoredProduct('supreme', products[i]._id)) {
+            //   sendMessage = true;
+            // }
           } else {
             if (oldSoldOutState != products[i].soldOut) {
-              if (!products[i].soldOut && await this.redisService.IsMonitoredProduct('supreme', products[i]._id)) {
-                sendMessage = true;
-              }
+              // if (!products[i].soldOut && await this.redisService.IsMonitoredProduct('supreme', products[i]._id)) {
+              //   sendMessage = true;
+              // }
             }  
           }  
           if (sendMessage) {
             let price = await this.GetPrice(products[i].href);
-            let users = await this.redisService.GetUserIdsMonitoringProduct('supreme', products[i]._id, price);
-            for (let j = 0; j < users.length; j++) {
-              let monitor = await this.monitorModel.GetMonitor({ userId: users[j] });
-              if (monitor && monitor.length == 1 && monitor[0].webHook) {
-                await this.discordService.SendMessage({ monitor: monitor[0], shoeName: item.name, price, href: `https://www.supremenewyork.com${products[i].href}`});
-              }
-            }
+            // let users = await this.redisService.GetUserIdsMonitoringProduct('supreme', products[i]._id, price);
+            // for (let j = 0; j < users.length; j++) {
+            //   let monitor = await this.monitorModel.GetMonitor({ userId: users[j] });
+            //   if (monitor && monitor.length == 1 && monitor[0].webHook) {
+            //     await this.discordService.SendMessage({ monitor: monitor[0], shoeName: item.name, price, href: `https://www.supremenewyork.com${products[i].href}`});
+            //   }
+            // }
           }
         }
       }

@@ -8,7 +8,7 @@ export class MonitorModel {
     this.dbProvider = provider;
   }
 
-  async GetMonitor({userId}: {userId: string}): Promise<Array<Monitor>> {
-    return await this.dbProvider.Find<Monitor>('monitors', {userId});
+  async GetMonitors(): Promise<Array<Monitor>> {
+    return await this.dbProvider.Find<Monitor>('monitors', {});
   }
 }

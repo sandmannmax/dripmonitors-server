@@ -29,10 +29,6 @@ export class MonitorService {
         return {success: false, error: {status: 404, message: 'Monitor is not existing.'}};      
       } else if (result.length == 1) {
         monitor = result[0];
-        if (!monitor.botImage)
-          monitor.botImage = 'https://www.lazyshoebot.com/logoWide.png'
-        if (!monitor.botName)
-          monitor.botName = 'LSB Monitor'
       } else {
         return {success: false, error: {status: 500, message: 'Unexpected Server Error', internalMessage: `MonitorService.GetMonitor: Found more than one monitor for userId = ${user._id}`}};
       }

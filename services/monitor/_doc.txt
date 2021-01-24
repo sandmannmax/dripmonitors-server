@@ -1,0 +1,2 @@
+https://api.myip.com
+https://advanced.name/freeproxy?country=DE

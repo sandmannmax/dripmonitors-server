@@ -1,14 +1,13 @@
 import DB, { IMonkManager, ICollection, FindOptions } from 'monk';
-import config from '../config';
 
 export class DatabaseProvider {
   private Database: IMonkManager;
 
-  constructor() {
-    this.Database = DB(config.databaseConnection, {
+  constructor(connection, username, password) {
+    this.Database = DB(connection, {
       auth: {
-        user: config.databaseUser,
-        password: config.databasePassword
+        user: username,
+        password: password
       },
       authSource: 'admin'
     });
