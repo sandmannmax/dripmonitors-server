@@ -1,0 +1,8 @@
+[submodule "monitor"]
+	path = monitor
+	url = https://github.com/sandmannmax/lsb-monitor.git
+	branch = master
+[submodule "monitor-frontend"]
+	path = monitor-frontend
+	url = https://github.com/sandmannmax/lsb-monitor-frontend.git
+	branch = master

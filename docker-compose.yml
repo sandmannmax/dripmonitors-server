@@ -21,8 +21,6 @@ services:
   #     - db
   #   volumes:
   #     - ./api/src:/usr/src/app/src
-  #   env_file: 
-  #     - .env
   # frontend:
   #  image: lsb-frontend
   #  volumes:
@@ -35,10 +33,18 @@ services:
     links:
       - redis
       - db
-    volumes:
-      - ./services/monitor/src:/usr/src/app/src
+    ports:
+      - 6970:6970
     env_file: 
-      - .env
+      - ./monitor/.env
+  monitor-frontend:
+    image: lsb-monitor-frontend
+    depends_on:
+      - monitor
+    links:
+      - monitor
+    ports:
+      - 6969:6969
   db:
     image: mongo
     volumes:
@@ -46,6 +52,16 @@ services:
     ports:
       - 27017:27017
     env_file: 
+      - .env
+  db-express:
+    image: mongo-express
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - 8081:8081
+    env_file:
       - .env
   redis:
     image: redis
