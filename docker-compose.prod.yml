@@ -5,14 +5,10 @@ services:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-nginx:latest
     depends_on:
       - api
-      - frontend
-      - app-frontend
       - monitor
       - monitor-frontend
     links:
       - api
-      - frontend
-      - app-frontend
       - monitor
       - monitor-frontend
     ports:
@@ -33,18 +29,6 @@ services:
       - ./data/api/logs:/home/node/app/logs
     env_file: 
       - .env
-  frontend:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-frontend:latest
-    depends_on:
-      - api
-    links:
-      - api
-  app-frontend:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-app-frontend:latest
-    depends_on:
-      - api
-    links:
-      - api
   monitor:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor:latest
     depends_on:
