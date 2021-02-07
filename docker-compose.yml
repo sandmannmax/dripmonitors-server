@@ -1,0 +1,87 @@
+version: '3.4'
+
+services:
+  # reverse-proxy:
+  #   image: nginx:1.19.5
+  #   depends_on:
+  #     - api
+  #     - frontend
+  #   links:
+  #     - api
+  #     - frontend
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./nginx.dev.conf:/etc/nginx/nginx.conf
+  api:
+    image: lsb-api
+    depends_on:
+      - db
+      - dynamo
+    links:
+      - db
+      - dynamo
+    ports:
+      - 3000:3000
+    volumes:
+      - ./api/src:/usr/src/app/src
+  # frontend:
+  #  image: lsb-frontend
+  #  volumes:
+  #    - ./frontend/src:/app/src
+  # monitor:
+  #   image: lsb-monitor
+  #   depends_on:
+  #     - redis
+  #     - db
+  #   links:
+  #     - redis
+  #     - db
+  #   ports:
+  #     - 6970:6970
+  #   env_file: 
+  #     - ./monitor/.env
+  # monitor-frontend:
+  #   image: lsb-monitor-frontend
+  #   depends_on:
+  #     - monitor
+  #   links:
+  #     - monitor
+  #   ports:
+  #     - 6969:6969
+  db:
+    image: mongo
+    volumes:
+      - mongoVolume:/data/db
+    ports:
+      - 27017:27017
+    env_file: 
+      - .env
+  db-express:
+    image: mongo-express
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+  # redis:
+  #   image: redis
+  #   volumes:
+  #     - redisVolume:/data
+  #   ports:
+  #     - 6379:6379
+  dynamo:
+    image: amazon/dynamodb-local
+    ports:
+      - 8000:8000
+    volumes:
+      - dynamoVolume:/home/dynamodblocal
+  
+
+volumes:
+  mongoVolume:
+  redisVolume:
+  dynamoVolume:

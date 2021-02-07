@@ -1,0 +1,24 @@
+[submodule "monitor"]
+	path = monitor
+	url = https://github.com/sandmannmax/lsb-monitor.git
+	branch = master
+[submodule "monitor-frontend"]
+	path = monitor-frontend
+	url = https://github.com/sandmannmax/lsb-monitor-frontend.git
+	branch = master
+[submodule "nginx"]
+	path = nginx
+	url = https://github.com/sandmannmax/lsb-nginx.git
+	branch = master
+[submodule "api"]
+	path = api
+	url = https://github.com/sandmannmax/lsb-api.git
+	branch = master
+[submodule "app-frontend"]
+	path = app-frontend
+	url = https://github.com/sandmannmax/lsb-app-frontend.git
+	branch = master
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/sandmannmax/lsb-frontend.git
+	branch = master
