@@ -5,16 +5,11 @@ services:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-nginx:latest
     depends_on:
       - api
-      - monitor
-      - monitor-frontend
     links:
       - api
-      - monitor
-      - monitor-frontend
     ports:
       - 80:80
       - 443:443
-      - 6969:6969
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./data/certbot/conf:/etc/letsencrypt
@@ -22,9 +17,9 @@ services:
   api:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:latest
     depends_on:
-      - db
+      - redis
     links:
-      - db
+      - redis
     volumes:
       - ./data/api/logs:/home/node/app/logs
     env_file: 
@@ -33,26 +28,10 @@ services:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor:latest
     depends_on:
       - redis
-      - db
     links:
       - redis
-      - db
     volumes:
       - ./data/monitor/logs:/home/node/app/logs
-    env_file: 
-      - .env
-  monitor-frontend:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor-frontend:latest
-    depends_on:
-      - monitor
-    links:
-      - monitor
-  db:
-    image: mongo
-    volumes:
-      - dbVolume:/data/db
-    ports:
-      - 27017:27017
     env_file: 
       - .env
   redis:
@@ -63,5 +42,4 @@ services:
       - 6379:6379
 
 volumes:
-  dbVolume:
   redisVolume:
