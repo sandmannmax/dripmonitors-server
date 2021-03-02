@@ -2,10 +2,6 @@
 	path = monitor
 	url = git@github.com:sandmannmax/lsb-monitor.git
 	branch = master
-[submodule "monitor-frontend"]
-	path = monitor-frontend
-	url = git@github.com:sandmannmax/lsb-monitor-frontend.git
-	branch = master
 [submodule "nginx"]
 	path = nginx
 	url = git@github.com:sandmannmax/lsb-nginx.git
@@ -21,4 +17,12 @@
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:sandmannmax/lsb-frontend.git
+	branch = master
+[submodule "scraper"]
+	path = scraper
+	url = git@github.com:sandmannmax/lsb-scraper.git
+	branch = master
+[submodule "proxy"]
+	path = proxy
+	url = git@github.com:sandmannmax/lsb-proxy.git
 	branch = master

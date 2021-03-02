@@ -1,0 +1,1 @@
+scp -i ~/dev/LazyShoeBot/lazyshoebot.pem -r ec2-user@18.185.249.68:/home/ec2-user/proto/build . 

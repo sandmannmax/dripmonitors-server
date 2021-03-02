@@ -1,0 +1,19 @@
+version: v1beta1
+
+plugins:
+  - name: js
+    out: build/nodejs
+    opt: import_style=commonjs,binary
+
+  - name: jsgrpc
+    out: build/nodejs
+    opt: grpc_js
+    path: grpc_tools_node_protoc_plugin
+
+  - name: ts
+    out: build/nodejs
+    opt: grpc_js
+    path: protoc-gen-ts
+
+  - name: python
+    out: build/python
