@@ -1,51 +1,43 @@
-version: '3.4'
+version: '3.7'
 
 services:
   nginx:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-nginx:latest
-    depends_on:
-      - api
-    links:
-      - api
+    networks:
+      - lsbNetwork
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
   api:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:latest
-    depends_on:
-      - redis
-    links:
-      - redis
-    volumes:
-      - ./data/api/logs:/home/node/app/logs
+    networks:
+      - lsbNetwork
     env_file:
       - .env
-  monitor:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor:latest
-    depends_on:
-      - redis
-      - scraper
-    links:
-      - redis
-      - scraper
-    volumes:
-      - ./data/monitor/logs:/home/node/app/logs
-    env_file:
-      - .env
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: api-logs
+        awslogs-region: eu-central-1
+        awslogs-stream: api1
   scraper:
     image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-scraper:latest
-    ports:
-      - 50069:50069
+    networks:
+      - lsbNetwork
+    env_file:
+      - .env
   redis:
-    image: redis
+    image: redis:6.2.1
+    networks:
+      - lsbNetwork
     volumes:
       - redisVolume:/data
-    ports:
-      - 6379:6379
 
 volumes:
   redisVolume:
+networks:
+  lsbNetwork:
