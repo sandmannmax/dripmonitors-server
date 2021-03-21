@@ -22,7 +22,7 @@
 	path = scraper
 	url = git@github.com:sandmannmax/lsb-scraper.git
 	branch = master
-[submodule "proxy"]
-	path = proxy
-	url = git@github.com:sandmannmax/lsb-proxy.git
+[submodule "monitors"]
+	path = monitors
+	url = git@github.com:lazyshoebot/monitors.git
 	branch = master

@@ -3,38 +3,17 @@ syntax = "proto3";
 package scraper.v1;
 
 service ScraperService {
-  rpc GetHtml (GetHtmlRequest) returns (GetHtmlResponse) {}
-  rpc GetProducts (GetProductsRequest) returns (GetProductsResponse) {}
+  rpc Get (GetRequest) returns (GetResponse) {}
 }
 
-message GetHtmlRequest {
+message GetRequest {
   string url = 1;
-  string proxy_address = 2;
+  string proxy = 2;
+  bool isHtml = 3;
 }
 
-message GetHtmlResponse {
-  string html = 1;
-}
-
-message GetProductsRequest {
-  string techname = 1;
-  string proxy_address = 2;
-}
-
-message GetProductsResponse {
-  repeated Product products = 1;
-}
-
-message Product {
-  string id = 1;
-  string name = 2;
-  string monitorpage_id = 3;
-  string href = 4;
-  string img = 5;
-  string price = 6;
-  repeated string sizes = 7;
-  repeated bool sizes_sold_out = 8;
-  bool sold_out = 9;
-  bool active = 10;
-  bool has_sizes = 11;
+message GetResponse {
+  bool success = 1;
+  string content = 2;
+  string error = 3;
 }

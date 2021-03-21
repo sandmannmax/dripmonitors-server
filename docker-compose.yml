@@ -1,51 +1,48 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  nginx:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-nginx:latest
-    depends_on:
-      - api
-    links:
-      - api
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
   api:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:latest
+    build:
+      context: api
     depends_on:
       - redis
+      - dynamodb
+      - postgres
     links:
       - redis
-    volumes:
-      - ./data/api/logs:/home/node/app/logs
+      - dynamodb
+      - postgres
     env_file:
-      - .env
-  monitor:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor:latest
-    depends_on:
-      - redis
-      - scraper
-    links:
-      - redis
-      - scraper
+      - .env    
     volumes:
-      - ./data/monitor/logs:/home/node/app/logs
-    env_file:
-      - .env
-  scraper:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-scraper:latest
+      - ./api/src:/app/src
     ports:
-      - 50069:50069
+      - 3000:3000
+  scraper:    
+    image: scraper
+    env_file:
+      - .env
   redis:
     image: redis
+  dynamodb:
+    image: amazon/dynamodb-local
     volumes:
-      - redisVolume:/data
+      - dynamodb-home:/var/lib/docker/dynamo/home
+      - dynamodb-data:/var/lib/docker/dynamo/data
     ports:
-      - 6379:6379
+      - 7999:7999
+    entrypoint: ["java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb", "-port", "7999"] 
+  postgres:
+    image: postgres:12.5-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=lazyshoebotdb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
 volumes:
-  redisVolume:
+  dynamodb-home:
+  dynamodb-data:
+  postgres-data:
