@@ -1,24 +1,29 @@
-[submodule "nginx"]
-	path = nginx
-	url = git@github.com:sandmannmax/lsb-nginx.git
-	branch = master
-[submodule "api"]
-	path = api
-	url = git@github.com:sandmannmax/lsb-api.git
-	branch = master
-[submodule "app-frontend"]
-	path = app-frontend
-	url = git@github.com:sandmannmax/lsb-app-frontend.git
-	branch = master
-[submodule "frontend"]
-	path = frontend
+[submodule "main"]
+	path = frontend/main
 	url = git@github.com:sandmannmax/lsb-frontend.git
 	branch = master
+[submodule "app"]
+	path = frontend/app
+	url = git@github.com:sandmannmax/lsb-app-frontend.git
+	branch = master
+
+[submodule "api"]
+	path = backend/api
+	url = git@github.com:sandmannmax/lsb-api.git
+	branch = master
 [submodule "scraper"]
-	path = scraper
+	path = backend/scraper
 	url = git@github.com:sandmannmax/lsb-scraper.git
 	branch = master
-[submodule "monitors"]
-	path = monitors
-	url = git@github.com:lazyshoebot/monitors.git
+[submodule "monitor"]
+	path = backend/monitor
+	url = git@github.com:sandmannmax/lsb-monitor.git
+	branch = master
+[submodule "discord"]
+	path = backend/discord
+	url = git@github.com:lazyshoebot/lazyshoebot-discord-bot.git
+	branch = master
+[submodule "nginx"]
+	path = backend/nginx
+	url = git@github.com:sandmannmax/lsb-nginx.git
 	branch = master

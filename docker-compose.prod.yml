@@ -13,7 +13,7 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
   api:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:latest
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-api:v0.5.8
     networks:
       - lsbNetwork
     env_file:
@@ -24,8 +24,32 @@ services:
         awslogs-group: api-logs
         awslogs-region: eu-central-1
         awslogs-stream: api1
+  discord:
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lazyshoebot-discord-bot:v0.0.1
+    networks:
+      - lsbNetwork
+    env_file:
+      - .env
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: discord-logs
+        awslogs-region: eu-central-1
+        awslogs-stream: discord1
+  discord:
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-monitor:v0.7.6
+    networks:
+      - lsbNetwork
+    env_file:
+      - .env
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: monitor-logs
+        awslogs-region: eu-central-1
+        awslogs-stream: monitor1
   scraper:
-    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-scraper:latest
+    image: 487233414922.dkr.ecr.eu-central-1.amazonaws.com/lsb-scraper:v0.1.5
     networks:
       - lsbNetwork
     env_file:

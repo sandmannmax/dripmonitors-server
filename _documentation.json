@@ -20,10 +20,29 @@
       },
       "post": {
         "description": "Set User Scope to Beta-Tester",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "accesskey",
+            "in": "body",
+            "description": "Accesskey for Beta-Access",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Set User Scope to Beta-Tester",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Accesskey is missing | Accesskey is used or invalid",
             "schema": {
               "type": "object",
               "properties": {

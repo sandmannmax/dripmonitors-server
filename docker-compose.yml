@@ -2,36 +2,46 @@ version: '3.8'
 
 services:
   api:
+    # image: lazyshoebot_server_api
     build:
-      context: api
+      context: backend/api
     depends_on:
       - redis
-      - dynamodb
       - postgres
     links:
       - redis
-      - dynamodb
       - postgres
     env_file:
-      - .env    
+      - .env
     volumes:
-      - ./api/src:/app/src
+      - ./backend/api/src:/app/src
     ports:
       - 3000:3000
+  monitor:
+    build:
+      context: backend/monitor
+    depends_on:
+      - redis
+    links:
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - ./backend/monitor/src:/app/src
+  # discord:
+  #   image: lazyshoebot_server_discord
+  #   depends_on:
+  #     - postgres
+  #   links:
+  #     - postgres
+  #   env_file:
+  #     - .env
   scraper:    
     image: scraper
     env_file:
       - .env
   redis:
     image: redis
-  dynamodb:
-    image: amazon/dynamodb-local
-    volumes:
-      - dynamodb-home:/var/lib/docker/dynamo/home
-      - dynamodb-data:/var/lib/docker/dynamo/data
-    ports:
-      - 7999:7999
-    entrypoint: ["java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb", "-port", "7999"] 
   postgres:
     image: postgres:12.5-alpine
     environment:
@@ -43,6 +53,4 @@ services:
       - 5432:5432
 
 volumes:
-  dynamodb-home:
-  dynamodb-data:
   postgres-data:

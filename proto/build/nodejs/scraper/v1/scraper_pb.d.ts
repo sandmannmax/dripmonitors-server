@@ -11,8 +11,8 @@ export class GetRequest extends jspb.Message {
     setUrl(value: string): GetRequest;
     getProxy(): string;
     setProxy(value: string): GetRequest;
-    getIshtml(): boolean;
-    setIshtml(value: boolean): GetRequest;
+    getIsHtml(): boolean;
+    setIsHtml(value: boolean): GetRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetRequest.AsObject;
@@ -28,13 +28,15 @@ export namespace GetRequest {
     export type AsObject = {
         url: string,
         proxy: string,
-        ishtml: boolean,
+        isHtml: boolean,
     }
 }
 
 export class GetResponse extends jspb.Message { 
-    getSuccess(): boolean;
-    setSuccess(value: boolean): GetResponse;
+    getStatusCode(): number;
+    setStatusCode(value: number): GetResponse;
+    getProxyError(): boolean;
+    setProxyError(value: boolean): GetResponse;
     getContent(): string;
     setContent(value: string): GetResponse;
     getError(): string;
@@ -52,7 +54,8 @@ export class GetResponse extends jspb.Message {
 
 export namespace GetResponse {
     export type AsObject = {
-        success: boolean,
+        statusCode: number,
+        proxyError: boolean,
         content: string,
         error: string,
     }
