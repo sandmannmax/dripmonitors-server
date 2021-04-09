@@ -51,6 +51,12 @@ services:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      
 volumes:
   postgres-data:

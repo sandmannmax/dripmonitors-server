@@ -19,59 +19,62 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18monitor/v1/monitor.proto\x12\nmonitor.v1\";\n\x12GetProductsRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\"F\n\x13GetProductsResponse\x12/\n\x08products\x18\x01 \x03(\x0b\x32\x13.monitor.v1.ProductR\x08products\"\x90\x01\n\x07Product\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n\nproduct_id\x18\x02 \x01(\tR\tproductId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12\x12\n\x04href\x18\x04 \x01(\tR\x04href\x12\x10\n\x03img\x18\x05 \x01(\tR\x03img\x12\x1c\n\tmonitored\x18\x06 \x01(\x08R\tmonitored\"Y\n ActivateProductMonitoringRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\x12\x0e\n\x02id\x18\x02 \x01(\tR\x02id\"#\n!ActivateProductMonitoringResponse\"X\n\x1f\x44isableProductMonitoringRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\x12\x0e\n\x02id\x18\x02 \x01(\tR\x02id\"\"\n DisableProductMonitoringResponse\":\n\x11GetFiltersRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\"B\n\x12GetFiltersResponse\x12,\n\x07\x66ilters\x18\x01 \x03(\x0b\x32\x12.monitor.v1.FilterR\x07\x66ilters\"O\n\x10\x41\x64\x64\x46ilterRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"?\n\x11\x41\x64\x64\x46ilterResponse\x12*\n\x06\x66ilter\x18\x01 \x01(\x0b\x32\x12.monitor.v1.FilterR\x06\x66ilter\".\n\x06\x46ilter\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"L\n\x13RemoveFilterRequest\x12%\n\x0emonitorpage_id\x18\x01 \x01(\tR\rmonitorpageId\x12\x0e\n\x02id\x18\x02 \x01(\tR\x02id\"\x16\n\x14RemoveFilterResponse2\xc7\x04\n\x0eMonitorService\x12P\n\x0bGetProducts\x12\x1e.monitor.v1.GetProductsRequest\x1a\x1f.monitor.v1.GetProductsResponse\"\x00\x12z\n\x19\x41\x63tivateProductMonitoring\x12,.monitor.v1.ActivateProductMonitoringRequest\x1a-.monitor.v1.ActivateProductMonitoringResponse\"\x00\x12w\n\x18\x44isableProductMonitoring\x12+.monitor.v1.DisableProductMonitoringRequest\x1a,.monitor.v1.DisableProductMonitoringResponse\"\x00\x12M\n\nGetFilters\x12\x1d.monitor.v1.GetFiltersRequest\x1a\x1e.monitor.v1.GetFiltersResponse\"\x00\x12J\n\tAddFilter\x12\x1c.monitor.v1.AddFilterRequest\x1a\x1d.monitor.v1.AddFilterResponse\"\x00\x12S\n\x0cRemoveFilter\x12\x1f.monitor.v1.RemoveFilterRequest\x1a .monitor.v1.RemoveFilterResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18monitor/v1/monitor.proto\x12\nmonitor.v1\"\x95\x02\n\x0bMonitorpage\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12)\n\x10monitorpage_name\x18\x02 \x01(\tR\x0fmonitorpageName\x12\x38\n\x18monitorpage_display_name\x18\x03 \x01(\tR\x16monitorpageDisplayName\x12#\n\rinterval_time\x18\x04 \x01(\x05R\x0cintervalTime\x12,\n\x07\x66ilters\x18\x05 \x03(\x0b\x32\x12.monitor.v1.FilterR\x07\x66ilters\x12#\n\x04urls\x18\x06 \x03(\x0b\x32\x0f.monitor.v1.UrlR\x04urls\"\xac\x01\n\x07Product\x12!\n\x0cproduct_uuid\x18\x01 \x01(\tR\x0bproductUuid\x12&\n\x0fproduct_page_id\x18\x02 \x01(\tR\rproductPageId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12\x12\n\x04href\x18\x04 \x01(\tR\x04href\x12\x10\n\x03img\x18\x05 \x01(\tR\x03img\x12\x1c\n\tmonitored\x18\x06 \x01(\x08R\tmonitored\"\x1e\n\x06\x46ilter\x12\x14\n\x05value\x18\x01 \x01(\tR\x05value\"\x1b\n\x03Url\x12\x14\n\x05value\x18\x01 \x01(\tR\x05value\"\x18\n\x16GetMonitorpagesRequest\"V\n\x17GetMonitorpagesResponse\x12;\n\x0cmonitorpages\x18\x01 \x03(\x0b\x32\x17.monitor.v1.MonitorpageR\x0cmonitorpages\"B\n\x15GetMonitorpageRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\"S\n\x16GetMonitorpageResponse\x12\x39\n\x0bmonitorpage\x18\x01 \x01(\x0b\x32\x17.monitor.v1.MonitorpageR\x0bmonitorpage\"?\n\x12GetProductsRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\"F\n\x13GetProductsResponse\x12/\n\x08products\x18\x01 \x03(\x0b\x32\x13.monitor.v1.ProductR\x08products\"a\n\x11GetProductRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12!\n\x0cproduct_uuid\x18\x02 \x01(\tR\x0bproductUuid\"C\n\x12GetProductResponse\x12-\n\x07product\x18\x01 \x01(\x0b\x32\x13.monitor.v1.ProductR\x07product\"p\n ActivateProductMonitoringRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12!\n\x0cproduct_uuid\x18\x02 \x01(\tR\x0bproductUuid\"#\n!ActivateProductMonitoringResponse\"o\n\x1f\x44isableProductMonitoringRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12!\n\x0cproduct_uuid\x18\x02 \x01(\tR\x0bproductUuid\"\"\n DisableProductMonitoringResponse\">\n\x11GetFiltersRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\"B\n\x12GetFiltersResponse\x12,\n\x07\x66ilters\x18\x01 \x03(\x0b\x32\x12.monitor.v1.FilterR\x07\x66ilters\"S\n\x10\x41\x64\x64\x46ilterRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"\x13\n\x11\x41\x64\x64\x46ilterResponse\"V\n\x13RemoveFilterRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"\x16\n\x14RemoveFilterResponse\";\n\x0eGetUrlsRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\"6\n\x0fGetUrlsResponse\x12#\n\x04urls\x18\x01 \x03(\x0b\x32\x0f.monitor.v1.UrlR\x04urls\"P\n\rAddUrlRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"\x10\n\x0e\x41\x64\x64UrlResponse\"S\n\x10RemoveUrlRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value\"\x13\n\x11RemoveUrlResponse\"i\n\x17StartMonitorpageRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\x12#\n\rinterval_time\x18\x02 \x01(\x05R\x0cintervalTime\"\x1a\n\x18StartMonitorpageResponse\"C\n\x16StopMonitorpageRequest\x12)\n\x10monitorpage_uuid\x18\x01 \x01(\tR\x0fmonitorpageUuid\"\x19\n\x17StopMonitorpageResponse2\xe3\t\n\x0eMonitorService\x12\\\n\x0fGetMonitorpages\x12\".monitor.v1.GetMonitorpagesRequest\x1a#.monitor.v1.GetMonitorpagesResponse\"\x00\x12Y\n\x0eGetMonitorpage\x12!.monitor.v1.GetMonitorpageRequest\x1a\".monitor.v1.GetMonitorpageResponse\"\x00\x12P\n\x0bGetProducts\x12\x1e.monitor.v1.GetProductsRequest\x1a\x1f.monitor.v1.GetProductsResponse\"\x00\x12M\n\nGetProduct\x12\x1d.monitor.v1.GetProductRequest\x1a\x1e.monitor.v1.GetProductResponse\"\x00\x12z\n\x19\x41\x63tivateProductMonitoring\x12,.monitor.v1.ActivateProductMonitoringRequest\x1a-.monitor.v1.ActivateProductMonitoringResponse\"\x00\x12w\n\x18\x44isableProductMonitoring\x12+.monitor.v1.DisableProductMonitoringRequest\x1a,.monitor.v1.DisableProductMonitoringResponse\"\x00\x12M\n\nGetFilters\x12\x1d.monitor.v1.GetFiltersRequest\x1a\x1e.monitor.v1.GetFiltersResponse\"\x00\x12J\n\tAddFilter\x12\x1c.monitor.v1.AddFilterRequest\x1a\x1d.monitor.v1.AddFilterResponse\"\x00\x12S\n\x0cRemoveFilter\x12\x1f.monitor.v1.RemoveFilterRequest\x1a .monitor.v1.RemoveFilterResponse\"\x00\x12\x44\n\x07GetUrls\x12\x1a.monitor.v1.GetUrlsRequest\x1a\x1b.monitor.v1.GetUrlsResponse\"\x00\x12\x41\n\x06\x41\x64\x64Url\x12\x19.monitor.v1.AddUrlRequest\x1a\x1a.monitor.v1.AddUrlResponse\"\x00\x12J\n\tRemoveUrl\x12\x1c.monitor.v1.RemoveUrlRequest\x1a\x1d.monitor.v1.RemoveUrlResponse\"\x00\x12_\n\x10StartMonitorpage\x12#.monitor.v1.StartMonitorpageRequest\x1a$.monitor.v1.StartMonitorpageResponse\"\x00\x12\\\n\x0fStopMonitorpage\x12\".monitor.v1.StopMonitorpageRequest\x1a#.monitor.v1.StopMonitorpageResponse\"\x00\x62\x06proto3'
 )
 
 
 
 
-_GETPRODUCTSREQUEST = _descriptor.Descriptor(
-  name='GetProductsRequest',
-  full_name='monitor.v1.GetProductsRequest',
+_MONITORPAGE = _descriptor.Descriptor(
+  name='Monitorpage',
+  full_name='monitor.v1.Monitorpage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.GetProductsRequest.monitorpage_id', index=0,
+      name='monitorpage_uuid', full_name='monitor.v1.Monitorpage.monitorpage_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=40,
-  serialized_end=99,
-)
-
-
-_GETPRODUCTSRESPONSE = _descriptor.Descriptor(
-  name='GetProductsResponse',
-  full_name='monitor.v1.GetProductsResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='products', full_name='monitor.v1.GetProductsResponse.products', index=0,
-      number=1, type=11, cpp_type=10, label=3,
+      name='monitorpage_name', full_name='monitor.v1.Monitorpage.monitorpage_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageName', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='monitorpage_display_name', full_name='monitor.v1.Monitorpage.monitorpage_display_name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageDisplayName', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='interval_time', full_name='monitor.v1.Monitorpage.interval_time', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='intervalTime', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='filters', full_name='monitor.v1.Monitorpage.filters', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='products', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='filters', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='urls', full_name='monitor.v1.Monitorpage.urls', index=5,
+      number=6, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='urls', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -84,8 +87,8 @@ _GETPRODUCTSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=101,
-  serialized_end=171,
+  serialized_start=41,
+  serialized_end=318,
 )
 
 
@@ -98,19 +101,19 @@ _PRODUCT = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='monitor.v1.Product.id', index=0,
+      name='product_uuid', full_name='monitor.v1.Product.product_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='id', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='productUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='product_id', full_name='monitor.v1.Product.product_id', index=1,
+      name='product_page_id', full_name='monitor.v1.Product.product_page_id', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='productId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='productPageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='name', full_name='monitor.v1.Product.name', index=2,
       number=3, type=9, cpp_type=9, label=1,
@@ -151,33 +154,26 @@ _PRODUCT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=174,
-  serialized_end=318,
+  serialized_start=321,
+  serialized_end=493,
 )
 
 
-_ACTIVATEPRODUCTMONITORINGREQUEST = _descriptor.Descriptor(
-  name='ActivateProductMonitoringRequest',
-  full_name='monitor.v1.ActivateProductMonitoringRequest',
+_FILTER = _descriptor.Descriptor(
+  name='Filter',
+  full_name='monitor.v1.Filter',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.ActivateProductMonitoringRequest.monitorpage_id', index=0,
+      name='value', full_name='monitor.v1.Filter.value', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='id', full_name='monitor.v1.ActivateProductMonitoringRequest.id', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='id', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='value', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -190,8 +186,335 @@ _ACTIVATEPRODUCTMONITORINGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=320,
-  serialized_end=409,
+  serialized_start=495,
+  serialized_end=525,
+)
+
+
+_URL = _descriptor.Descriptor(
+  name='Url',
+  full_name='monitor.v1.Url',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='value', full_name='monitor.v1.Url.value', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='value', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=527,
+  serialized_end=554,
+)
+
+
+_GETMONITORPAGESREQUEST = _descriptor.Descriptor(
+  name='GetMonitorpagesRequest',
+  full_name='monitor.v1.GetMonitorpagesRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=556,
+  serialized_end=580,
+)
+
+
+_GETMONITORPAGESRESPONSE = _descriptor.Descriptor(
+  name='GetMonitorpagesResponse',
+  full_name='monitor.v1.GetMonitorpagesResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpages', full_name='monitor.v1.GetMonitorpagesResponse.monitorpages', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpages', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=582,
+  serialized_end=668,
+)
+
+
+_GETMONITORPAGEREQUEST = _descriptor.Descriptor(
+  name='GetMonitorpageRequest',
+  full_name='monitor.v1.GetMonitorpageRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.GetMonitorpageRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=670,
+  serialized_end=736,
+)
+
+
+_GETMONITORPAGERESPONSE = _descriptor.Descriptor(
+  name='GetMonitorpageResponse',
+  full_name='monitor.v1.GetMonitorpageResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage', full_name='monitor.v1.GetMonitorpageResponse.monitorpage', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpage', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=738,
+  serialized_end=821,
+)
+
+
+_GETPRODUCTSREQUEST = _descriptor.Descriptor(
+  name='GetProductsRequest',
+  full_name='monitor.v1.GetProductsRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.GetProductsRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=823,
+  serialized_end=886,
+)
+
+
+_GETPRODUCTSRESPONSE = _descriptor.Descriptor(
+  name='GetProductsResponse',
+  full_name='monitor.v1.GetProductsResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='products', full_name='monitor.v1.GetProductsResponse.products', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='products', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=888,
+  serialized_end=958,
+)
+
+
+_GETPRODUCTREQUEST = _descriptor.Descriptor(
+  name='GetProductRequest',
+  full_name='monitor.v1.GetProductRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.GetProductRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='product_uuid', full_name='monitor.v1.GetProductRequest.product_uuid', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='productUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=960,
+  serialized_end=1057,
+)
+
+
+_GETPRODUCTRESPONSE = _descriptor.Descriptor(
+  name='GetProductResponse',
+  full_name='monitor.v1.GetProductResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='product', full_name='monitor.v1.GetProductResponse.product', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='product', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1059,
+  serialized_end=1126,
+)
+
+
+_ACTIVATEPRODUCTMONITORINGREQUEST = _descriptor.Descriptor(
+  name='ActivateProductMonitoringRequest',
+  full_name='monitor.v1.ActivateProductMonitoringRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.ActivateProductMonitoringRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='product_uuid', full_name='monitor.v1.ActivateProductMonitoringRequest.product_uuid', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='productUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1128,
+  serialized_end=1240,
 )
 
 
@@ -215,8 +538,8 @@ _ACTIVATEPRODUCTMONITORINGRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=411,
-  serialized_end=446,
+  serialized_start=1242,
+  serialized_end=1277,
 )
 
 
@@ -229,19 +552,19 @@ _DISABLEPRODUCTMONITORINGREQUEST = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.DisableProductMonitoringRequest.monitorpage_id', index=0,
+      name='monitorpage_uuid', full_name='monitor.v1.DisableProductMonitoringRequest.monitorpage_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='id', full_name='monitor.v1.DisableProductMonitoringRequest.id', index=1,
+      name='product_uuid', full_name='monitor.v1.DisableProductMonitoringRequest.product_uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='id', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='productUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -254,8 +577,8 @@ _DISABLEPRODUCTMONITORINGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=448,
-  serialized_end=536,
+  serialized_start=1279,
+  serialized_end=1390,
 )
 
 
@@ -279,8 +602,8 @@ _DISABLEPRODUCTMONITORINGRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=538,
-  serialized_end=572,
+  serialized_start=1392,
+  serialized_end=1426,
 )
 
 
@@ -293,12 +616,12 @@ _GETFILTERSREQUEST = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.GetFiltersRequest.monitorpage_id', index=0,
+      name='monitorpage_uuid', full_name='monitor.v1.GetFiltersRequest.monitorpage_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -311,8 +634,8 @@ _GETFILTERSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=574,
-  serialized_end=632,
+  serialized_start=1428,
+  serialized_end=1490,
 )
 
 
@@ -343,8 +666,8 @@ _GETFILTERSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=634,
-  serialized_end=700,
+  serialized_start=1492,
+  serialized_end=1558,
 )
 
 
@@ -357,12 +680,12 @@ _ADDFILTERREQUEST = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.AddFilterRequest.monitorpage_id', index=0,
+      name='monitorpage_uuid', full_name='monitor.v1.AddFilterRequest.monitorpage_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='value', full_name='monitor.v1.AddFilterRequest.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
@@ -382,8 +705,8 @@ _ADDFILTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=702,
-  serialized_end=781,
+  serialized_start=1560,
+  serialized_end=1643,
 )
 
 
@@ -395,13 +718,6 @@ _ADDFILTERRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
-    _descriptor.FieldDescriptor(
-      name='filter', full_name='monitor.v1.AddFilterResponse.filter', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='filter', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -414,28 +730,28 @@ _ADDFILTERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=783,
-  serialized_end=846,
+  serialized_start=1645,
+  serialized_end=1664,
 )
 
 
-_FILTER = _descriptor.Descriptor(
-  name='Filter',
-  full_name='monitor.v1.Filter',
+_REMOVEFILTERREQUEST = _descriptor.Descriptor(
+  name='RemoveFilterRequest',
+  full_name='monitor.v1.RemoveFilterRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='monitor.v1.Filter.id', index=0,
+      name='monitorpage_uuid', full_name='monitor.v1.RemoveFilterRequest.monitorpage_uuid', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='id', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='value', full_name='monitor.v1.Filter.value', index=1,
+      name='value', full_name='monitor.v1.RemoveFilterRequest.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -453,47 +769,8 @@ _FILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=848,
-  serialized_end=894,
-)
-
-
-_REMOVEFILTERREQUEST = _descriptor.Descriptor(
-  name='RemoveFilterRequest',
-  full_name='monitor.v1.RemoveFilterRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='monitorpage_id', full_name='monitor.v1.RemoveFilterRequest.monitorpage_id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='monitorpageId', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='id', full_name='monitor.v1.RemoveFilterRequest.id', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, json_name='id', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=896,
-  serialized_end=972,
+  serialized_start=1666,
+  serialized_end=1752,
 )
 
 
@@ -517,16 +794,343 @@ _REMOVEFILTERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=974,
-  serialized_end=996,
+  serialized_start=1754,
+  serialized_end=1776,
 )
 
+
+_GETURLSREQUEST = _descriptor.Descriptor(
+  name='GetUrlsRequest',
+  full_name='monitor.v1.GetUrlsRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.GetUrlsRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1778,
+  serialized_end=1837,
+)
+
+
+_GETURLSRESPONSE = _descriptor.Descriptor(
+  name='GetUrlsResponse',
+  full_name='monitor.v1.GetUrlsResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='urls', full_name='monitor.v1.GetUrlsResponse.urls', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='urls', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1839,
+  serialized_end=1893,
+)
+
+
+_ADDURLREQUEST = _descriptor.Descriptor(
+  name='AddUrlRequest',
+  full_name='monitor.v1.AddUrlRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.AddUrlRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='monitor.v1.AddUrlRequest.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='value', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1895,
+  serialized_end=1975,
+)
+
+
+_ADDURLRESPONSE = _descriptor.Descriptor(
+  name='AddUrlResponse',
+  full_name='monitor.v1.AddUrlResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1977,
+  serialized_end=1993,
+)
+
+
+_REMOVEURLREQUEST = _descriptor.Descriptor(
+  name='RemoveUrlRequest',
+  full_name='monitor.v1.RemoveUrlRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.RemoveUrlRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='monitor.v1.RemoveUrlRequest.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='value', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1995,
+  serialized_end=2078,
+)
+
+
+_REMOVEURLRESPONSE = _descriptor.Descriptor(
+  name='RemoveUrlResponse',
+  full_name='monitor.v1.RemoveUrlResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2080,
+  serialized_end=2099,
+)
+
+
+_STARTMONITORPAGEREQUEST = _descriptor.Descriptor(
+  name='StartMonitorpageRequest',
+  full_name='monitor.v1.StartMonitorpageRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.StartMonitorpageRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='interval_time', full_name='monitor.v1.StartMonitorpageRequest.interval_time', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='intervalTime', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2101,
+  serialized_end=2206,
+)
+
+
+_STARTMONITORPAGERESPONSE = _descriptor.Descriptor(
+  name='StartMonitorpageResponse',
+  full_name='monitor.v1.StartMonitorpageResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2208,
+  serialized_end=2234,
+)
+
+
+_STOPMONITORPAGEREQUEST = _descriptor.Descriptor(
+  name='StopMonitorpageRequest',
+  full_name='monitor.v1.StopMonitorpageRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monitorpage_uuid', full_name='monitor.v1.StopMonitorpageRequest.monitorpage_uuid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='monitorpageUuid', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2236,
+  serialized_end=2303,
+)
+
+
+_STOPMONITORPAGERESPONSE = _descriptor.Descriptor(
+  name='StopMonitorpageResponse',
+  full_name='monitor.v1.StopMonitorpageResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2305,
+  serialized_end=2330,
+)
+
+_MONITORPAGE.fields_by_name['filters'].message_type = _FILTER
+_MONITORPAGE.fields_by_name['urls'].message_type = _URL
+_GETMONITORPAGESRESPONSE.fields_by_name['monitorpages'].message_type = _MONITORPAGE
+_GETMONITORPAGERESPONSE.fields_by_name['monitorpage'].message_type = _MONITORPAGE
 _GETPRODUCTSRESPONSE.fields_by_name['products'].message_type = _PRODUCT
+_GETPRODUCTRESPONSE.fields_by_name['product'].message_type = _PRODUCT
 _GETFILTERSRESPONSE.fields_by_name['filters'].message_type = _FILTER
-_ADDFILTERRESPONSE.fields_by_name['filter'].message_type = _FILTER
+_GETURLSRESPONSE.fields_by_name['urls'].message_type = _URL
+DESCRIPTOR.message_types_by_name['Monitorpage'] = _MONITORPAGE
+DESCRIPTOR.message_types_by_name['Product'] = _PRODUCT
+DESCRIPTOR.message_types_by_name['Filter'] = _FILTER
+DESCRIPTOR.message_types_by_name['Url'] = _URL
+DESCRIPTOR.message_types_by_name['GetMonitorpagesRequest'] = _GETMONITORPAGESREQUEST
+DESCRIPTOR.message_types_by_name['GetMonitorpagesResponse'] = _GETMONITORPAGESRESPONSE
+DESCRIPTOR.message_types_by_name['GetMonitorpageRequest'] = _GETMONITORPAGEREQUEST
+DESCRIPTOR.message_types_by_name['GetMonitorpageResponse'] = _GETMONITORPAGERESPONSE
 DESCRIPTOR.message_types_by_name['GetProductsRequest'] = _GETPRODUCTSREQUEST
 DESCRIPTOR.message_types_by_name['GetProductsResponse'] = _GETPRODUCTSRESPONSE
-DESCRIPTOR.message_types_by_name['Product'] = _PRODUCT
+DESCRIPTOR.message_types_by_name['GetProductRequest'] = _GETPRODUCTREQUEST
+DESCRIPTOR.message_types_by_name['GetProductResponse'] = _GETPRODUCTRESPONSE
 DESCRIPTOR.message_types_by_name['ActivateProductMonitoringRequest'] = _ACTIVATEPRODUCTMONITORINGREQUEST
 DESCRIPTOR.message_types_by_name['ActivateProductMonitoringResponse'] = _ACTIVATEPRODUCTMONITORINGRESPONSE
 DESCRIPTOR.message_types_by_name['DisableProductMonitoringRequest'] = _DISABLEPRODUCTMONITORINGREQUEST
@@ -535,10 +1139,75 @@ DESCRIPTOR.message_types_by_name['GetFiltersRequest'] = _GETFILTERSREQUEST
 DESCRIPTOR.message_types_by_name['GetFiltersResponse'] = _GETFILTERSRESPONSE
 DESCRIPTOR.message_types_by_name['AddFilterRequest'] = _ADDFILTERREQUEST
 DESCRIPTOR.message_types_by_name['AddFilterResponse'] = _ADDFILTERRESPONSE
-DESCRIPTOR.message_types_by_name['Filter'] = _FILTER
 DESCRIPTOR.message_types_by_name['RemoveFilterRequest'] = _REMOVEFILTERREQUEST
 DESCRIPTOR.message_types_by_name['RemoveFilterResponse'] = _REMOVEFILTERRESPONSE
+DESCRIPTOR.message_types_by_name['GetUrlsRequest'] = _GETURLSREQUEST
+DESCRIPTOR.message_types_by_name['GetUrlsResponse'] = _GETURLSRESPONSE
+DESCRIPTOR.message_types_by_name['AddUrlRequest'] = _ADDURLREQUEST
+DESCRIPTOR.message_types_by_name['AddUrlResponse'] = _ADDURLRESPONSE
+DESCRIPTOR.message_types_by_name['RemoveUrlRequest'] = _REMOVEURLREQUEST
+DESCRIPTOR.message_types_by_name['RemoveUrlResponse'] = _REMOVEURLRESPONSE
+DESCRIPTOR.message_types_by_name['StartMonitorpageRequest'] = _STARTMONITORPAGEREQUEST
+DESCRIPTOR.message_types_by_name['StartMonitorpageResponse'] = _STARTMONITORPAGERESPONSE
+DESCRIPTOR.message_types_by_name['StopMonitorpageRequest'] = _STOPMONITORPAGEREQUEST
+DESCRIPTOR.message_types_by_name['StopMonitorpageResponse'] = _STOPMONITORPAGERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+Monitorpage = _reflection.GeneratedProtocolMessageType('Monitorpage', (_message.Message,), {
+  'DESCRIPTOR' : _MONITORPAGE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.Monitorpage)
+  })
+_sym_db.RegisterMessage(Monitorpage)
+
+Product = _reflection.GeneratedProtocolMessageType('Product', (_message.Message,), {
+  'DESCRIPTOR' : _PRODUCT,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.Product)
+  })
+_sym_db.RegisterMessage(Product)
+
+Filter = _reflection.GeneratedProtocolMessageType('Filter', (_message.Message,), {
+  'DESCRIPTOR' : _FILTER,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.Filter)
+  })
+_sym_db.RegisterMessage(Filter)
+
+Url = _reflection.GeneratedProtocolMessageType('Url', (_message.Message,), {
+  'DESCRIPTOR' : _URL,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.Url)
+  })
+_sym_db.RegisterMessage(Url)
+
+GetMonitorpagesRequest = _reflection.GeneratedProtocolMessageType('GetMonitorpagesRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETMONITORPAGESREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetMonitorpagesRequest)
+  })
+_sym_db.RegisterMessage(GetMonitorpagesRequest)
+
+GetMonitorpagesResponse = _reflection.GeneratedProtocolMessageType('GetMonitorpagesResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETMONITORPAGESRESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetMonitorpagesResponse)
+  })
+_sym_db.RegisterMessage(GetMonitorpagesResponse)
+
+GetMonitorpageRequest = _reflection.GeneratedProtocolMessageType('GetMonitorpageRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETMONITORPAGEREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetMonitorpageRequest)
+  })
+_sym_db.RegisterMessage(GetMonitorpageRequest)
+
+GetMonitorpageResponse = _reflection.GeneratedProtocolMessageType('GetMonitorpageResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETMONITORPAGERESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetMonitorpageResponse)
+  })
+_sym_db.RegisterMessage(GetMonitorpageResponse)
 
 GetProductsRequest = _reflection.GeneratedProtocolMessageType('GetProductsRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETPRODUCTSREQUEST,
@@ -554,12 +1223,19 @@ GetProductsResponse = _reflection.GeneratedProtocolMessageType('GetProductsRespo
   })
 _sym_db.RegisterMessage(GetProductsResponse)
 
-Product = _reflection.GeneratedProtocolMessageType('Product', (_message.Message,), {
-  'DESCRIPTOR' : _PRODUCT,
+GetProductRequest = _reflection.GeneratedProtocolMessageType('GetProductRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETPRODUCTREQUEST,
   '__module__' : 'monitor.v1.monitor_pb2'
-  # @@protoc_insertion_point(class_scope:monitor.v1.Product)
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetProductRequest)
   })
-_sym_db.RegisterMessage(Product)
+_sym_db.RegisterMessage(GetProductRequest)
+
+GetProductResponse = _reflection.GeneratedProtocolMessageType('GetProductResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETPRODUCTRESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetProductResponse)
+  })
+_sym_db.RegisterMessage(GetProductResponse)
 
 ActivateProductMonitoringRequest = _reflection.GeneratedProtocolMessageType('ActivateProductMonitoringRequest', (_message.Message,), {
   'DESCRIPTOR' : _ACTIVATEPRODUCTMONITORINGREQUEST,
@@ -617,13 +1293,6 @@ AddFilterResponse = _reflection.GeneratedProtocolMessageType('AddFilterResponse'
   })
 _sym_db.RegisterMessage(AddFilterResponse)
 
-Filter = _reflection.GeneratedProtocolMessageType('Filter', (_message.Message,), {
-  'DESCRIPTOR' : _FILTER,
-  '__module__' : 'monitor.v1.monitor_pb2'
-  # @@protoc_insertion_point(class_scope:monitor.v1.Filter)
-  })
-_sym_db.RegisterMessage(Filter)
-
 RemoveFilterRequest = _reflection.GeneratedProtocolMessageType('RemoveFilterRequest', (_message.Message,), {
   'DESCRIPTOR' : _REMOVEFILTERREQUEST,
   '__module__' : 'monitor.v1.monitor_pb2'
@@ -638,6 +1307,76 @@ RemoveFilterResponse = _reflection.GeneratedProtocolMessageType('RemoveFilterRes
   })
 _sym_db.RegisterMessage(RemoveFilterResponse)
 
+GetUrlsRequest = _reflection.GeneratedProtocolMessageType('GetUrlsRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETURLSREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetUrlsRequest)
+  })
+_sym_db.RegisterMessage(GetUrlsRequest)
+
+GetUrlsResponse = _reflection.GeneratedProtocolMessageType('GetUrlsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETURLSRESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.GetUrlsResponse)
+  })
+_sym_db.RegisterMessage(GetUrlsResponse)
+
+AddUrlRequest = _reflection.GeneratedProtocolMessageType('AddUrlRequest', (_message.Message,), {
+  'DESCRIPTOR' : _ADDURLREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.AddUrlRequest)
+  })
+_sym_db.RegisterMessage(AddUrlRequest)
+
+AddUrlResponse = _reflection.GeneratedProtocolMessageType('AddUrlResponse', (_message.Message,), {
+  'DESCRIPTOR' : _ADDURLRESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.AddUrlResponse)
+  })
+_sym_db.RegisterMessage(AddUrlResponse)
+
+RemoveUrlRequest = _reflection.GeneratedProtocolMessageType('RemoveUrlRequest', (_message.Message,), {
+  'DESCRIPTOR' : _REMOVEURLREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.RemoveUrlRequest)
+  })
+_sym_db.RegisterMessage(RemoveUrlRequest)
+
+RemoveUrlResponse = _reflection.GeneratedProtocolMessageType('RemoveUrlResponse', (_message.Message,), {
+  'DESCRIPTOR' : _REMOVEURLRESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.RemoveUrlResponse)
+  })
+_sym_db.RegisterMessage(RemoveUrlResponse)
+
+StartMonitorpageRequest = _reflection.GeneratedProtocolMessageType('StartMonitorpageRequest', (_message.Message,), {
+  'DESCRIPTOR' : _STARTMONITORPAGEREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.StartMonitorpageRequest)
+  })
+_sym_db.RegisterMessage(StartMonitorpageRequest)
+
+StartMonitorpageResponse = _reflection.GeneratedProtocolMessageType('StartMonitorpageResponse', (_message.Message,), {
+  'DESCRIPTOR' : _STARTMONITORPAGERESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.StartMonitorpageResponse)
+  })
+_sym_db.RegisterMessage(StartMonitorpageResponse)
+
+StopMonitorpageRequest = _reflection.GeneratedProtocolMessageType('StopMonitorpageRequest', (_message.Message,), {
+  'DESCRIPTOR' : _STOPMONITORPAGEREQUEST,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.StopMonitorpageRequest)
+  })
+_sym_db.RegisterMessage(StopMonitorpageRequest)
+
+StopMonitorpageResponse = _reflection.GeneratedProtocolMessageType('StopMonitorpageResponse', (_message.Message,), {
+  'DESCRIPTOR' : _STOPMONITORPAGERESPONSE,
+  '__module__' : 'monitor.v1.monitor_pb2'
+  # @@protoc_insertion_point(class_scope:monitor.v1.StopMonitorpageResponse)
+  })
+_sym_db.RegisterMessage(StopMonitorpageResponse)
+
 
 
 _MONITORSERVICE = _descriptor.ServiceDescriptor(
@@ -647,13 +1386,33 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=999,
-  serialized_end=1582,
+  serialized_start=2333,
+  serialized_end=3584,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='GetMonitorpages',
+    full_name='monitor.v1.MonitorService.GetMonitorpages',
+    index=0,
+    containing_service=None,
+    input_type=_GETMONITORPAGESREQUEST,
+    output_type=_GETMONITORPAGESRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetMonitorpage',
+    full_name='monitor.v1.MonitorService.GetMonitorpage',
+    index=1,
+    containing_service=None,
+    input_type=_GETMONITORPAGEREQUEST,
+    output_type=_GETMONITORPAGERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
   _descriptor.MethodDescriptor(
     name='GetProducts',
     full_name='monitor.v1.MonitorService.GetProducts',
-    index=0,
+    index=2,
     containing_service=None,
     input_type=_GETPRODUCTSREQUEST,
     output_type=_GETPRODUCTSRESPONSE,
@@ -661,9 +1420,19 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
+    name='GetProduct',
+    full_name='monitor.v1.MonitorService.GetProduct',
+    index=3,
+    containing_service=None,
+    input_type=_GETPRODUCTREQUEST,
+    output_type=_GETPRODUCTRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
     name='ActivateProductMonitoring',
     full_name='monitor.v1.MonitorService.ActivateProductMonitoring',
-    index=1,
+    index=4,
     containing_service=None,
     input_type=_ACTIVATEPRODUCTMONITORINGREQUEST,
     output_type=_ACTIVATEPRODUCTMONITORINGRESPONSE,
@@ -673,7 +1442,7 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DisableProductMonitoring',
     full_name='monitor.v1.MonitorService.DisableProductMonitoring',
-    index=2,
+    index=5,
     containing_service=None,
     input_type=_DISABLEPRODUCTMONITORINGREQUEST,
     output_type=_DISABLEPRODUCTMONITORINGRESPONSE,
@@ -683,7 +1452,7 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetFilters',
     full_name='monitor.v1.MonitorService.GetFilters',
-    index=3,
+    index=6,
     containing_service=None,
     input_type=_GETFILTERSREQUEST,
     output_type=_GETFILTERSRESPONSE,
@@ -693,7 +1462,7 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='AddFilter',
     full_name='monitor.v1.MonitorService.AddFilter',
-    index=4,
+    index=7,
     containing_service=None,
     input_type=_ADDFILTERREQUEST,
     output_type=_ADDFILTERRESPONSE,
@@ -703,10 +1472,60 @@ _MONITORSERVICE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='RemoveFilter',
     full_name='monitor.v1.MonitorService.RemoveFilter',
-    index=5,
+    index=8,
     containing_service=None,
     input_type=_REMOVEFILTERREQUEST,
     output_type=_REMOVEFILTERRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetUrls',
+    full_name='monitor.v1.MonitorService.GetUrls',
+    index=9,
+    containing_service=None,
+    input_type=_GETURLSREQUEST,
+    output_type=_GETURLSRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='AddUrl',
+    full_name='monitor.v1.MonitorService.AddUrl',
+    index=10,
+    containing_service=None,
+    input_type=_ADDURLREQUEST,
+    output_type=_ADDURLRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='RemoveUrl',
+    full_name='monitor.v1.MonitorService.RemoveUrl',
+    index=11,
+    containing_service=None,
+    input_type=_REMOVEURLREQUEST,
+    output_type=_REMOVEURLRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='StartMonitorpage',
+    full_name='monitor.v1.MonitorService.StartMonitorpage',
+    index=12,
+    containing_service=None,
+    input_type=_STARTMONITORPAGEREQUEST,
+    output_type=_STARTMONITORPAGERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='StopMonitorpage',
+    full_name='monitor.v1.MonitorService.StopMonitorpage',
+    index=13,
+    containing_service=None,
+    input_type=_STOPMONITORPAGEREQUEST,
+    output_type=_STOPMONITORPAGERESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

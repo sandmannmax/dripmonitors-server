@@ -3,47 +3,99 @@ syntax = "proto3";
 package monitor.v1;
 
 service MonitorService {
+  rpc GetMonitorpages (GetMonitorpagesRequest) returns (GetMonitorpagesResponse) {}
+  rpc GetMonitorpage (GetMonitorpageRequest) returns (GetMonitorpageResponse) {}
+
   rpc GetProducts (GetProductsRequest) returns (GetProductsResponse) {}
+  rpc GetProduct (GetProductRequest) returns (GetProductResponse) {}
   rpc ActivateProductMonitoring (ActivateProductMonitoringRequest) returns (ActivateProductMonitoringResponse) {}
   rpc DisableProductMonitoring (DisableProductMonitoringRequest) returns (DisableProductMonitoringResponse) {}
+
   rpc GetFilters (GetFiltersRequest) returns (GetFiltersResponse) {}
   rpc AddFilter (AddFilterRequest) returns (AddFilterResponse) {}
   rpc RemoveFilter (RemoveFilterRequest) returns (RemoveFilterResponse) {}
+
+  rpc GetUrls (GetUrlsRequest) returns (GetUrlsResponse) {}
+  rpc AddUrl (AddUrlRequest) returns (AddUrlResponse) {}
+  rpc RemoveUrl (RemoveUrlRequest) returns (RemoveUrlResponse) {}
+
+  rpc StartMonitorpage (StartMonitorpageRequest) returns (StartMonitorpageResponse) {}
+  rpc StopMonitorpage (StopMonitorpageRequest) returns (StopMonitorpageResponse) {}
 }
 
-message GetProductsRequest {
-  string monitorpage_id = 1;
-}
-
-message GetProductsResponse {
-  repeated Product products = 1;
+message Monitorpage {
+  string monitorpage_uuid = 1;
+  string monitorpage_name = 2;
+  string monitorpage_display_name = 3;
+  int32 interval_time = 4;
+  repeated Filter filters = 5;
+  repeated Url urls = 6;
 }
 
 message Product {
-  string id = 1;
-  string product_id = 2;
+  string product_uuid = 1;
+  string product_page_id = 2;
   string name = 3;
   string href = 4;
   string img = 5;
   bool monitored = 6;
 }
 
+message Filter {
+  string value = 1;
+}
+
+message Url {
+  string value = 1;
+}
+
+message GetMonitorpagesRequest { }
+
+message GetMonitorpagesResponse {
+  repeated Monitorpage monitorpages = 1;
+}
+
+message GetMonitorpageRequest {
+  string monitorpage_uuid = 1; 
+}
+
+message GetMonitorpageResponse {
+  Monitorpage monitorpage = 1;
+}
+
+message GetProductsRequest {
+  string monitorpage_uuid = 1;
+}
+
+message GetProductsResponse {
+  repeated Product products = 1;
+}
+
+message GetProductRequest {
+  string monitorpage_uuid = 1;
+  string product_uuid = 2;
+}
+
+message GetProductResponse {
+  Product product = 1;
+}
+
 message ActivateProductMonitoringRequest {
-  string monitorpage_id = 1;
-  string id = 2;
+  string monitorpage_uuid = 1;
+  string product_uuid = 2;
 }
 
 message ActivateProductMonitoringResponse { }
 
 message DisableProductMonitoringRequest {
-  string monitorpage_id = 1;
-  string id = 2;
+  string monitorpage_uuid = 1;
+  string product_uuid = 2;
 }
 
 message DisableProductMonitoringResponse { }
 
 message GetFiltersRequest {
-  string monitorpage_id = 1;
+  string monitorpage_uuid = 1;
 }
 
 message GetFiltersResponse {
@@ -51,22 +103,50 @@ message GetFiltersResponse {
 }
 
 message AddFilterRequest {
-  string monitorpage_id = 1;
+  string monitorpage_uuid = 1;
   string value = 2;
 }
 
-message AddFilterResponse {
-  Filter filter = 1;
-}
-
-message Filter {
-  string id = 1;
-  string value = 2;
-}
+message AddFilterResponse { }
 
 message RemoveFilterRequest {
-  string monitorpage_id = 1;
-  string id = 2;
+  string monitorpage_uuid = 1;
+  string value = 2;
 }
 
 message RemoveFilterResponse { }
+
+message GetUrlsRequest {
+  string monitorpage_uuid = 1;
+}
+
+message GetUrlsResponse {
+  repeated Url urls = 1;
+}
+
+message AddUrlRequest {
+  string monitorpage_uuid = 1;
+  string value = 2;
+}
+
+message AddUrlResponse { }
+
+message RemoveUrlRequest {
+  string monitorpage_uuid = 1;
+  string value = 2;
+}
+
+message RemoveUrlResponse { }
+
+message StartMonitorpageRequest {
+  string monitorpage_uuid = 1;
+  int32 interval_time = 2;
+}
+
+message StartMonitorpageResponse { }
+
+message StopMonitorpageRequest {
+  string monitorpage_uuid = 1;
+}
+
+message StopMonitorpageResponse { }
