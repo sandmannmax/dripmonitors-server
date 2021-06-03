@@ -8,9 +8,11 @@ services:
     depends_on:
       - redis
       - postgres
+      - monitor
     links:
       - redis
       - postgres
+      - monitor
     env_file:
       - .env
     volumes:
@@ -18,6 +20,7 @@ services:
     ports:
       - 3000:3000
   monitor:
+    # image: lazyshoebot_server_monitor
     build:
       context: backend/monitor
     depends_on:
@@ -45,10 +48,11 @@ services:
   postgres:
     image: postgres:12.5-alpine
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=lazyshoebotdb
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+    # volumes:
+    #   - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
   prometheus:
