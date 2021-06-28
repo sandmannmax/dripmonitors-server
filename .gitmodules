@@ -5,7 +5,7 @@
 [submodule "app"]
 	path = frontend/app
 	url = git@github.com:Drip-Solutions/dm-app-frontend.git
-	branch = masterd
+	branch = master
 [submodule "api"]
 	path = backend/api
 	url = git@github.com:Drip-Solutions/dm-api.git
