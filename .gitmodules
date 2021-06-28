@@ -1,29 +1,28 @@
 [submodule "main"]
 	path = frontend/main
-	url = git@github.com:sandmannmax/lsb-frontend.git
+	url = git@github.com:Drip-Solutions/dm-frontend.git
 	branch = master
 [submodule "app"]
 	path = frontend/app
-	url = git@github.com:sandmannmax/lsb-app-frontend.git
-	branch = master
-
+	url = git@github.com:Drip-Solutions/dm-app-frontend.git
+	branch = masterd
 [submodule "api"]
 	path = backend/api
-	url = git@github.com:sandmannmax/lsb-api.git
+	url = git@github.com:Drip-Solutions/dm-api.git
 	branch = master
 [submodule "scraper"]
 	path = backend/scraper
-	url = git@github.com:sandmannmax/lsb-scraper.git
+	url = git@github.com:Drip-Solutions/dm-scraper.git
 	branch = master
 [submodule "monitor"]
 	path = backend/monitor
-	url = git@github.com:sandmannmax/lsb-monitor.git
+	url = git@github.com:Drip-Solutions/dm-monitor.git
 	branch = master
 [submodule "discord"]
 	path = backend/discord
-	url = git@github.com:lazyshoebot/lazyshoebot-discord-bot.git
+	url = git@github.com:Drip-Solutions/dm-discord-bot.git
 	branch = master
 [submodule "nginx"]
 	path = backend/nginx
-	url = git@github.com:sandmannmax/lsb-nginx.git
+	url = git@github.com:Drip-Solutions/dm-nginx.git
 	branch = master
